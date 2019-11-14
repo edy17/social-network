@@ -1,0 +1,13 @@
+dependency-reduced-pom.xml
+.settings
+.vscode
+.factorypath
+log.txt
+target
+.classpath
+.project
+unpack
+.sts4-cache/
+.attach_pid*
+.idea
+*.iml

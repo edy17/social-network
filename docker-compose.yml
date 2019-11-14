@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  graalvm:
+    build:
+      context: .
+#    volumes:
+#      - ./spring-graal-native-samples/commandlinerunner:/tmp/spring-graal-native-samples/commandlinerunner
+
