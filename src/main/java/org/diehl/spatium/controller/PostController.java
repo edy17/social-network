@@ -13,7 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletionStage;
 
 
@@ -38,7 +37,6 @@ public class PostController {
 
     @POST
     public CompletionStage<List<Post>> add(Post post) {
-        post.setId(UUID.randomUUID().toString());
         service.add(post);
         return getAll();
     }
