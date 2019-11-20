@@ -2,6 +2,7 @@ package org.diehl.spatium.repository;
 
 
 import org.diehl.spatium.model.Post;
+import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
@@ -36,11 +37,9 @@ public class PostRepository {
         fieldStream.forEach(field -> {
             try {
                 if (field.getName().equals("image")) {
-
+                    item.put(field.getName(), AttributeValue.builder().b(SdkBytes.fromByteArray((byte[])field.get(post))).build());
                 } else if (field.getName().equals("instant")) {
-
-                } else if (field.getName().equals("comments")) {
-
+                    item.put(field.getName(), AttributeValue.builder().bool((boolean) field.get(post)).build());
                 } else {
                     item.put(field.getName(), AttributeValue.builder().s((String) field.get(post)).build());
                 }

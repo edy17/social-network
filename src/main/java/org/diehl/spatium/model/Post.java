@@ -21,7 +21,6 @@ public class Post extends AbstractBaseEntity {
     private boolean isVisible;
     private int reportsNumber;
     private String userId;
-    private List<Comment> comments;
 
     public static Post from(Map<String, AttributeValue> item) {
         Post post = new Post();
@@ -86,13 +85,5 @@ public class Post extends AbstractBaseEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 }
