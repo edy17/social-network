@@ -1,8 +1,7 @@
 package org.diehl.spatium.controller;
 
-
-import org.diehl.spatium.model.Post;
-import org.diehl.spatium.service.PostService;
+import org.diehl.spatium.model.User;
+import org.diehl.spatium.service.UserService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.inject.Inject;
@@ -17,31 +16,30 @@ import java.util.List;
 import java.util.concurrent.CompletionStage;
 
 
-@Path("/posts")
+@Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
-public class PostController {
+public class UserController {
 
     @Inject
-    PostService service;
+    UserService service;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<List<Post>> getAll() {
+    public CompletionStage<List<User>> getAll() {
         return service.findAll();
     }
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public CompletionStage<Post> getSingle(@PathParam("id") String id) {
+    public CompletionStage<User> getSingle(@PathParam("id") String id) {
         return service.getById(id);
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public CompletionStage<List<Post>> add(@MultipartForm Post post) {
-        service.add(post);
+    public CompletionStage<List<User>> add(@MultipartForm User user) {
+        service.add(user);
         return getAll();
     }
-
 }

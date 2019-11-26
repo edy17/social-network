@@ -5,8 +5,6 @@ import java.util.Objects;
 
 public class AbstractBaseEntity implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     private String id;
 
     public String getId() {

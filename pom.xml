@@ -13,7 +13,6 @@
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <quarkus.version>1.0.0.CR1</quarkus.version>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <compiler-plugin.version>3.8.1</compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -38,7 +37,11 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jsonb</artifactId>
+            <artifactId>quarkus-resteasy-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -100,9 +103,6 @@
             <id>native</id>
             <properties>
                 <quarkus.package.type>native</quarkus.package.type>
-                <quarkus.native.additional-build-args>
-                    -H:ResourceConfigurationFiles=${project.basedir}/resources-config.json
-                </quarkus.native.additional-build-args>
             </properties>
             <activation>
                 <property>
