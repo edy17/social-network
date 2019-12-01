@@ -7,6 +7,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -24,7 +25,7 @@ public class Post extends AbstractBaseEntity {
     private boolean isVisible;
     private int reportsNumber;
     private String userId;
-    private List<Comment> comments;
+    private Collection<Comment> comments;
 
     public static Post from(Map<String, AttributeValue> item) {
         Post post = new Post();
@@ -101,7 +102,7 @@ public class Post extends AbstractBaseEntity {
         this.userId = userId;
     }
 
-    public List<Comment> getComments() {
+    public Collection<Comment> getComments() {
         return comments;
     }
 

@@ -1,0 +1,281 @@
+<!-- Header-->
+<!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
+<header class="site-header navbar-sticky">
+  <!-- Topbar-->
+  <div class="topbar d-flex justify-content-between">
+    <!-- Logo-->
+    <div class="site-branding d-flex"><a class="site-logo align-self-center" href="index.html">SPATIUM</a></div>
+    <!-- Toolbar-->
+    <div class="toolbar d-flex">
+      <div class="toolbar-item visible-on-mobile mobile-menu-toggle"><a href="#">
+        <div><i class="icon-menu"></i><span class="text-label">Menu</span></div>
+      </a>
+      </div>
+      <div class="toolbar-item hidden-on-mobile"><a href="../account-login.html">
+        <div><i class="icon-user"></i><span class="text-label">Sign In / Up</span></div>
+      </a>
+        <div class="toolbar-dropdown text-center px-3">
+          <p class="text-xs mb-3 pt-2">Sign in to your account or register new one to view all posts, or create your
+            posts.</p>
+          <a class="btn btn-primary btn-sm btn-block" href="../account-login.html">Sign In</a>
+          <p class="text-xs text-muted mb-2">New customer?&nbsp;<a href="../account-login.html">Register</a></p>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile Menu-->
+    <div class="mobile-menu">
+      <!-- Toolbar-->
+      <div class="toolbar">
+        <div class="toolbar-item">
+          <a href="../account-login.html">
+            <div><i class="icon-user"></i><span class="text-label">Sign In / Up</span></div>
+          </a>
+        </div>
+      </div>
+      <!-- Slideable (Mobile) Menu-->
+      <nav class="slideable-menu">
+        <ul class="menu" data-initial-height="385">
+          <li class="active">
+            <span><a href="#">Home</a></span>
+          </li>
+          <li>
+            <span><a href="#">My posts</a></span>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- Navbar-->
+  <div class="navbar">
+    <!-- Main Navigation-->
+    <nav class="site-menu">
+      <ul>
+        <li class="active"><a href="#">Home</a>
+        </li>
+        <li><a href="#">My posts</a>
+        </li>
+      </ul>
+    </nav>
+    <!-- Toolbar ( Put toolbar here only if you enable sticky navbar )-->
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <div class="toolbar-item">
+          <a href="../account-login.html">
+            <div>
+              <i class="icon-user"></i>
+              <span class="text-label">Sign In / Up</span>
+            </div>
+          </a>
+          <div class="toolbar-dropdown text-center px-3">
+            <p class="text-xs mb-3 pt-2">Sign in to your account or register new one to view all posts, or create your
+              posts.</p>
+            <a class="btn btn-primary btn-sm btn-block" href="../account-login.html">Sign In</a>
+            <p class="text-xs text-muted mb-2">New customer?&nbsp;<a href="../account-login.html">Register</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Page Title-->
+<div class="page-title">
+  <div class="container">
+    <div class="column">
+      <h1>Share posts with your Organisation</h1>
+    </div>
+  </div>
+</div>
+<!-- Page Content-->
+<div class="container padding-bottom-3x mb-2">
+  <div class="row">
+    <div class="col-lg-9 col-md-8 order-md-2">
+      <div class="container-fluid">
+        <mat-card>
+          <mat-card-header>
+            <div mat-card-avatar
+                 style="background-image:url('https://material.angular.io/assets/img/examples/shiba1.jpg');background-size: cover;">
+            </div>
+            <mat-card-title>Shiba Inu</mat-card-title>
+            <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image style="width: 90%; height: 90%;"
+               src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+          <mat-card-content>
+            <p>
+              The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+              A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+              bred for hunting.
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button><i class="icon-heart"></i></button>
+            <button mat-button (click)="clickOnComments()"><i class="icon-message-square"></i></button>
+          </mat-card-actions>
+          <mat-card-footer>
+            <mat-expansion-panel [expanded]="isExpanded" hideToggle class="mat-elevation-z0">
+              <ul class="widget-featured-posts">
+                <mat-card class="entry">
+                  <div class="entry-thumb">
+                    <img src="https://miro.medium.com/fit/c/256/256/1*gMTuDxQmsldDmMAQpLD_sQ.jpeg" alt="Post">
+                  </div>
+                  <div class="entry-content">
+                    <a href="#">
+                      <span class="entry-meta entry-title">by Michelle Obama</span>
+                    </a>
+                    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro minus sint optio explicabo eum
+                      perspiciatis ipsam adipisci, excepturi repellendus debitis fugit laborum quae, aspernatur ex
+                      neque
+                      hic nihil, reiciendis veritatis.
+                    </p>
+                  </div>
+                </mat-card>
+                <mat-card class="entry">
+                  <div class="entry-thumb">
+                    <img src="https://miro.medium.com/fit/c/256/256/1*gMTuDxQmsldDmMAQpLD_sQ.jpeg" alt="Post">
+                  </div>
+                  <div class="entry-content">
+                    <a href="#">
+                      <span class="entry-meta entry-title">by Michelle Obama</span>
+                    </a>
+                    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro minus sint optio explicabo eum
+                      perspiciatis ipsam adipisci, excepturi repellendus debitis fugit laborum quae, aspernatur ex
+                      neque
+                      hic nihil, reiciendis veritatis.
+                    </p>
+                  </div>
+                </mat-card>
+              </ul>
+            </mat-expansion-panel>
+          </mat-card-footer>
+        </mat-card>
+        <hr class="padding-top-2x mt-2">
+      </div>
+
+      <div class="container-fluid">
+        <mat-card>
+          <mat-card-header>
+            <div mat-card-avatar
+                 style="background-image:url('https://material.angular.io/assets/img/examples/shiba1.jpg');background-size: cover;">
+            </div>
+            <mat-card-title>Shiba Inu</mat-card-title>
+            <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image style="width: 90%; height: 90%;"
+               src="https://static1.purepeople.com/articles/2/36/31/52/@/5230886-michelle-obama-publie-une-photo-de-famil-950x0-2.jpg" alt="Photo of a Shiba Inu">
+          <mat-card-content>
+            <p>
+              The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+              A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+              bred for hunting.
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-button><i class="icon-heart"></i></button>
+            <button mat-button (click)="clickOnComments()"><i class="icon-message-square"></i></button>
+          </mat-card-actions>
+          <mat-card-footer>
+            <mat-expansion-panel [expanded]="isExpanded" hideToggle class="mat-elevation-z0">
+              <ul class="widget-featured-posts">
+                <mat-card class="entry">
+                  <div class="entry-thumb">
+                    <img src="https://miro.medium.com/fit/c/256/256/1*gMTuDxQmsldDmMAQpLD_sQ.jpeg" alt="Post">
+                  </div>
+                  <div class="entry-content">
+                    <a href="#">
+                      <span class="entry-meta entry-title">by Michelle Obama</span>
+                    </a>
+                    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro minus sint optio explicabo eum
+                      perspiciatis ipsam adipisci, excepturi repellendus debitis fugit laborum quae, aspernatur ex
+                      neque
+                      hic nihil, reiciendis veritatis.
+                    </p>
+                  </div>
+                </mat-card>
+                <mat-card class="entry">
+                  <div class="entry-thumb">
+                    <img src="https://miro.medium.com/fit/c/256/256/1*gMTuDxQmsldDmMAQpLD_sQ.jpeg" alt="Post">
+                  </div>
+                  <div class="entry-content">
+                    <a href="#">
+                      <span class="entry-meta entry-title">by Michelle Obama</span>
+                    </a>
+                    <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro minus sint optio explicabo eum
+                      perspiciatis ipsam adipisci, excepturi repellendus debitis fugit laborum quae, aspernatur ex
+                      neque
+                      hic nihil, reiciendis veritatis.
+                    </p>
+                  </div>
+                </mat-card>
+              </ul>
+            </mat-expansion-panel>
+          </mat-card-footer>
+        </mat-card>
+        <hr class="padding-top-2x mt-2">
+      </div>
+
+
+    </div>
+    <!-- Side Menu-->
+    <div class="col-lg-3 col-md-4 order-md-1">
+      <div class="padding-top-3x hidden-md-up"></div>
+      <div class="card rounded-bottom-0" data-filter-list="#components-list">
+        <div class="card-body pb-3">
+          <div class="widget mb-4">
+            <div class="input-group form-group"><span class="input-group-btn">
+                    <button class="btn" type="submit" disabled=""><i class="icon-search"></i></button></span>
+              <input class="form-control" type="text" placeholder="Search Your Organisation">
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="list-group" id="components-list">
+        <a class="list-group-item list-group-item-action" href="accordion.html" data-filter-item="af">Google</a>
+        <a class="list-group-item list-group-item-action" href="alerts.html" data-filter-item="af">Facebook</a>
+      </nav>
+    </div>
+  </div>
+</div>
+<div class="container-fluid footer-light">
+  <!-- Copyright-->
+  <p class="footer-copyright"> © All rights reserved. Made with &nbsp;<i class="icon-heart text-danger"></i>
+    <a href="#" target="_blank"> &nbsp;by Edy Diehl</a>
+  </p>
+</div>
+<!-- Photoswipe container-->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="pswp__bg"></div>
+  <div class="pswp__scroll-wrap">
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    <div class="pswp__ui pswp__ui--hidden">
+      <div class="pswp__top-bar">
+        <div class="pswp__counter"></div>
+        <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+        <button class="pswp__button pswp__button--share" title="Share"></button>
+        <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+        <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+        <div class="pswp__preloader">
+          <div class="pswp__preloader__icn">
+            <div class="pswp__preloader__cut">
+              <div class="pswp__preloader__donut"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+        <div class="pswp__share-tooltip"></div>
+      </div>
+      <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)"></button>
+      <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button>
+      <div class="pswp__caption">
+        <div class="pswp__caption__center"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Back To Top Button--><a class="scroll-to-top-btn" href="#"><i class="icon-chevron-up"></i></a>
+<!-- Backdrop-->
+<div class="site-backdrop"></div>
