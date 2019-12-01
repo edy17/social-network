@@ -1,40 +1,26 @@
 package org.diehl.spatium.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Stream;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @RegisterForReflection
 public class User extends AbstractBaseEntity {
 
-    private static Logger logger = Logger.getLogger("org.diehl.spatium.model.User");
-
+    @Size(max = 20, min = 3, message = "{user.username.invalid}")
+    @NotNull(message = "Please enter username")
     private String username;
+    @Size(max = 20, min = 3, message = "{user.password.invalid}")
+    @NotNull(message = "Please enter password")
+    @JsonIgnore
     private String password;
+    @Email(message = "{user.email.invalid}")
+    @NotNull(message = "Please enter email")
     private String email;
-
-    public static User from(Map<String, AttributeValue> item) {
-        User user = new User();
-        if (item != null && !item.isEmpty()) {
-            Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
-                try {
-                    if ((!field.getName().equals("logger"))
-                    && item.containsKey(field.getName())) {
-                        field.setAccessible(true);
-                        field.set(user, item.get(field.getName()).s());
-                    }
-                } catch (IllegalAccessException e) {
-                    logger.log(Level.SEVERE, "An exception was thrown: ", e);
-                }
-            });
-        }
-        return user;
-    }
 
     public String getUsername() {
         return username;

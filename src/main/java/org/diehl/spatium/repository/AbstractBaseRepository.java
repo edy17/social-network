@@ -27,6 +27,8 @@ public abstract class AbstractBaseRepository<T> {
 
     public abstract PutItemRequest putRequest(T abstractBaseEntity);
 
+    public abstract T getObject(Map<String, AttributeValue> item);
+
     public abstract String getTableName();
 
     public abstract List<String> getColumns();

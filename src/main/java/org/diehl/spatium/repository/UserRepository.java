@@ -1,7 +1,6 @@
 package org.diehl.spatium.repository;
 
 import org.diehl.spatium.model.AbstractBaseEntity;
-import org.diehl.spatium.model.Post;
 import org.diehl.spatium.model.User;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 public class UserRepository extends AbstractBaseRepository<User> {
 
     private static Logger logger = Logger.getLogger("org.diehl.spatium.repository.UserRepository");
-    private static final String tableName = "User";
+    private static final String TABLE_NAME = "User";
     private static final List<String> columns = Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).map(Field::getName).collect(Collectors.toList());
 
     @Override
@@ -36,14 +35,31 @@ public class UserRepository extends AbstractBaseRepository<User> {
             }
         });
         return PutItemRequest.builder()
-                .tableName(tableName)
+                .tableName(TABLE_NAME)
                 .item(item)
                 .build();
     }
 
     @Override
+    public User getObject(Map<String, AttributeValue> item) {
+        User user = new User();
+        if (item != null && !item.isEmpty()) {
+            Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
+                try {
+                    if (item.containsKey(field.getName())) {
+                        field.setAccessible(true);
+                        field.set(user, item.get(field.getName()).s());
+                    }
+                } catch (IllegalAccessException e) {
+                    logger.log(Level.SEVERE, "An exception was thrown: ", e);
+                }
+            });
+        }
+        return user;
+    }
+
     public String getTableName() {
-        return tableName;
+        return TABLE_NAME;
     }
 
     @Override

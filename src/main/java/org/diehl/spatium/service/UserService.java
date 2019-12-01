@@ -21,7 +21,7 @@ public class UserService {
 
     public CompletableFuture<List<User>> findAll() {
         return dynamoDB.scan(userRepository.scanRequest())
-                .thenApply(res -> res.items().stream().map(User::from).collect(Collectors.toList()));
+                .thenApply(res -> res.items().stream().map(userRepository::getObject).collect(Collectors.toList()));
     }
 
     public CompletableFuture<List<User>> add(User user) {
@@ -30,6 +30,6 @@ public class UserService {
     }
 
     public CompletableFuture<User> getById(String id) {
-        return dynamoDB.getItem(userRepository.getByIdRequest(id)).thenApply(response -> User.from(response.item()));
+        return dynamoDB.getItem(userRepository.getByIdRequest(id)).thenApply(response -> userRepository.getObject(response.item()));
     }
 }

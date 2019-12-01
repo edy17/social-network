@@ -1,11 +1,14 @@
 package org.diehl.spatium.model;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
 import java.io.Serializable;
 import java.util.Objects;
 
+@RegisterForReflection
 public class AbstractBaseEntity implements Serializable {
 
-    private String id;
+    protected String id;
 
     public String getId() {
         return id;
