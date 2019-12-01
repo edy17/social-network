@@ -1,8 +1,14 @@
 package org.diehl.spatium.repository;
 
+import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
 import software.amazon.awssdk.services.dynamodb.model.GetItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
+import software.amazon.awssdk.services.dynamodb.model.KeyType;
+import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
 
 import java.util.HashMap;
@@ -22,6 +28,24 @@ public abstract class AbstractBaseRepository<T> {
                 .tableName(this.getTableName())
                 .key(item)
                 .attributesToGet(this.getColumns())
+                .build();
+    }
+
+    public CreateTableRequest createTableRequest() {
+        return CreateTableRequest.builder()
+                .attributeDefinitions(AttributeDefinition.builder()
+                        .attributeName("id")
+                        .attributeType(ScalarAttributeType.S)
+                        .build())
+                .keySchema(KeySchemaElement.builder()
+                        .attributeName("id")
+                        .keyType(KeyType.HASH)
+                        .build())
+                .provisionedThroughput(ProvisionedThroughput.builder()
+                        .readCapacityUnits(10L)
+                        .writeCapacityUnits(10L)
+                        .build())
+                .tableName(getTableName())
                 .build();
     }
 

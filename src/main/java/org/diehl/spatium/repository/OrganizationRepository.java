@@ -6,26 +6,34 @@ import org.diehl.spatium.model.AbstractBaseEntity;
 import org.diehl.spatium.model.Organization;
 import org.diehl.spatium.model.Post;
 import org.diehl.spatium.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeAction;
+import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
+import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
+import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
+import software.amazon.awssdk.services.dynamodb.model.KeyType;
+import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
+import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 import software.amazon.awssdk.services.dynamodb.model.UpdateItemRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
 public class OrganizationRepository extends AbstractBaseRepository<Organization> {
 
-    private static Logger logger = Logger.getLogger("org.diehl.spatium.repository.OrganizationRepository");
+    private static final Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.OrganizationRepository");
+
     private static final String TABLE_NAME = "Organization";
     private static final String POSTS_COLUMN = "posts";
     private static final String USERS_COLUMN = "users";
@@ -58,7 +66,7 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
                     }
                 }
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "An exception was thrown: ", e);
+                logger.warn("An exception was thrown", e);
             }
         });
         return UpdateItemRequest.builder()
@@ -85,7 +93,7 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
                     }
                 }
             } catch (Exception e) {
-                logger.log(Level.SEVERE, "An exception was thrown: ", e);
+                logger.error("An exception occurred!", e);
             }
         });
         return PutItemRequest.builder()
@@ -117,7 +125,7 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
                         }
                     }
                 } catch (Exception e) {
-                    logger.log(Level.SEVERE, "An exception was thrown: ", e);
+                    logger.error("An exception occurred!", e);
                 }
             });
         }

@@ -2,6 +2,8 @@ package org.diehl.spatium.repository;
 
 import org.diehl.spatium.model.AbstractBaseEntity;
 import org.diehl.spatium.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
@@ -10,15 +12,13 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
 public class UserRepository extends AbstractBaseRepository<User> {
 
-    private static Logger logger = Logger.getLogger("org.diehl.spatium.repository.UserRepository");
+    private static Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.UserRepository");
     private static final String TABLE_NAME = "User";
     private static final List<String> columns = Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).map(Field::getName).collect(Collectors.toList());
 
@@ -30,8 +30,8 @@ public class UserRepository extends AbstractBaseRepository<User> {
                 if (field.get(user) != null) {
                     item.put(field.getName(), AttributeValue.builder().s((String) field.get(user)).build());
                 }
-            } catch (IllegalAccessException e) {
-                logger.log(Level.SEVERE, "An exception was thrown: ", e);
+            } catch (Exception e) {
+                logger.error("An exception occurred!", e);
             }
         });
         return PutItemRequest.builder()
@@ -50,8 +50,8 @@ public class UserRepository extends AbstractBaseRepository<User> {
                         field.setAccessible(true);
                         field.set(user, item.get(field.getName()).s());
                     }
-                } catch (IllegalAccessException e) {
-                    logger.log(Level.SEVERE, "An exception was thrown: ", e);
+                } catch (Exception e) {
+                    logger.error("An exception occurred!", e);
                 }
             });
         }
