@@ -35,9 +35,9 @@ public class PostService {
                 .thenApply(response -> postRepository.getObject(response.item()));
     }
 
-    public CompletableFuture<List<Post>> add(Post post) {
+    public CompletableFuture<Post> add(Post post) {
         Organization organization = organizationService.getById(post.getId()).getNow(new Organization());
-        if(organization.getId() !=null) {
+        if(organization.getName() !=null) {
             post.setId(UUID.randomUUID().toString());
             post.setInstant(new DateTime(DateTimeZone.UTC));
             if(organization.getPosts() == null) {
@@ -46,6 +46,6 @@ public class PostService {
             organization.getPosts().add(post.getId());
         }
         organizationService.update(organization);
-        return dynamoDB.putItem(postRepository.putRequest(post)).thenCompose(ret -> findAll());
+        return dynamoDB.putItem(postRepository.putRequest(post)).thenApply(response -> postRepository.getObject(response.attributes()));
     }
 }

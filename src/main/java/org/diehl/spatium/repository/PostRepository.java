@@ -35,6 +35,7 @@ public class PostRepository extends AbstractBaseRepository<Post> {
 
     private static Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.PostRepository");
     private static final String TABLE_NAME = "Post";
+    private static final String KEY_SCHEMA = "id";
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     private static final List<String> columns = Stream.of(AbstractBaseEntity.class.getDeclaredFields(), Post.class.getDeclaredFields()).flatMap(Stream::of).map(Field::getName).collect(Collectors.toList());
     private ObjectMapper mapper;
@@ -49,6 +50,7 @@ public class PostRepository extends AbstractBaseRepository<Post> {
         Map<String, AttributeValue> item = new HashMap<>();
         Stream.of(AbstractBaseEntity.class.getDeclaredFields(), Post.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
             try {
+                field.setAccessible(true);
                 if (field.get(post) != null) {
                     if (field.getName().equals("image")) {
                         item.put(field.getName(), AttributeValue.builder().b(SdkBytes.fromByteArray(post.getImage())).build());
@@ -116,5 +118,10 @@ public class PostRepository extends AbstractBaseRepository<Post> {
     @Override
     public List<String> getColumns() {
         return columns;
+    }
+
+    @Override
+    public String getKeySchema() {
+        return KEY_SCHEMA;
     }
 }

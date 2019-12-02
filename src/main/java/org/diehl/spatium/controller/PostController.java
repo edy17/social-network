@@ -3,6 +3,7 @@ package org.diehl.spatium.controller;
 
 import org.diehl.spatium.model.Post;
 import org.diehl.spatium.service.PostService;
+import org.jboss.logging.annotations.Pos;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.inject.Inject;
@@ -39,9 +40,8 @@ public class PostController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public CompletionStage<List<Post>> add(@MultipartForm Post post) {
-        service.add(post);
-        return getAll();
+    public CompletionStage<Post> add(@MultipartForm Post post) {
+        return service.add(post);
     }
 
 }

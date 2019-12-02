@@ -6,11 +6,19 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import java.util.List;
 
 @RegisterForReflection
-public class Organization extends AbstractBaseEntity {
+public class Organization {
 
     private String name;
     private List<String> posts;
     private List<String> users;
+
+    public Organization(String name) {
+        this.name = name;
+    }
+
+    public Organization() {
+
+    }
 
     public String getName() {
         return name;

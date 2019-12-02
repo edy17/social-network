@@ -24,9 +24,9 @@ public class UserService {
                 .thenApply(res -> res.items().stream().map(userRepository::getObject).collect(Collectors.toList()));
     }
 
-    public CompletableFuture<List<User>> add(User user) {
+    public CompletableFuture<User> add(User user) {
         user.setId(UUID.randomUUID().toString());
-        return dynamoDB.putItem(userRepository.putRequest(user)).thenCompose(ret -> findAll());
+        return dynamoDB.putItem(userRepository.putRequest(user)).thenApply(response -> userRepository.getObject(response.attributes()));
     }
 
     public CompletableFuture<User> getById(String id) {

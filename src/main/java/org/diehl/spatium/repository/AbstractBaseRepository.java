@@ -23,7 +23,7 @@ public abstract class AbstractBaseRepository<T> {
 
     public GetItemRequest getByIdRequest(String id) {
         Map<String, AttributeValue> item = new HashMap<>();
-        item.put("id", AttributeValue.builder().s(id).build());
+        item.put(getKeySchema(), AttributeValue.builder().s(id).build());
         return GetItemRequest.builder()
                 .tableName(this.getTableName())
                 .key(item)
@@ -34,16 +34,16 @@ public abstract class AbstractBaseRepository<T> {
     public CreateTableRequest createTableRequest() {
         return CreateTableRequest.builder()
                 .attributeDefinitions(AttributeDefinition.builder()
-                        .attributeName("id")
+                        .attributeName(getKeySchema())
                         .attributeType(ScalarAttributeType.S)
                         .build())
                 .keySchema(KeySchemaElement.builder()
-                        .attributeName("id")
+                        .attributeName(getKeySchema())
                         .keyType(KeyType.HASH)
                         .build())
                 .provisionedThroughput(ProvisionedThroughput.builder()
-                        .readCapacityUnits(10L)
-                        .writeCapacityUnits(10L)
+                        .readCapacityUnits(5L)
+                        .writeCapacityUnits(5L)
                         .build())
                 .tableName(getTableName())
                 .build();
@@ -56,4 +56,6 @@ public abstract class AbstractBaseRepository<T> {
     public abstract String getTableName();
 
     public abstract List<String> getColumns();
+
+    public abstract String getKeySchema();
 }

@@ -9,20 +9,13 @@ import org.diehl.spatium.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeAction;
-import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
-import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
-import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
-import software.amazon.awssdk.services.dynamodb.model.KeyType;
-import software.amazon.awssdk.services.dynamodb.model.ProvisionedThroughput;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
-import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 import software.amazon.awssdk.services.dynamodb.model.UpdateItemRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +28,7 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
     private static final Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.OrganizationRepository");
 
     private static final String TABLE_NAME = "Organization";
+    private static final String KEY_SCHEMA = "name";
     private static final String POSTS_COLUMN = "posts";
     private static final String USERS_COLUMN = "users";
     private static final List<String> columns = Stream.of(AbstractBaseEntity.class.getDeclaredFields(), Organization.class.getDeclaredFields()).flatMap(Stream::of).map(Field::getName).collect(Collectors.toList());
@@ -46,8 +40,7 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
     }
 
     public UpdateItemRequest update(Organization organization) {
-        Map<String, AttributeValue> item = new HashMap<>();
-        item.put("id", AttributeValue.builder().s(organization.getId()).build());
+
         Map<String, AttributeValueUpdate> updated_values = new HashMap<>();
         Stream.of(Organization.class.getDeclaredFields()).forEach(field -> {
             try {
@@ -69,6 +62,8 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
                 logger.warn("An exception was thrown", e);
             }
         });
+        Map<String, AttributeValue> item = new HashMap<>();
+        item.put("name", AttributeValue.builder().s(organization.getName()).build());
         return UpdateItemRequest.builder()
                 .tableName(TABLE_NAME)
                 .key(item)
@@ -79,8 +74,9 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
     @Override
     public PutItemRequest putRequest(Organization organization) {
         Map<String, AttributeValue> item = new HashMap<>();
-        Stream.of(AbstractBaseEntity.class.getDeclaredFields(), Organization.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
+        Stream.of(Organization.class.getDeclaredFields()).forEach(field -> {
             try {
+                field.setAccessible(true);
                 if (field.get(organization) != null) {
                     if (field.getName().equals(POSTS_COLUMN)) {
                         String json = mapper.writeValueAsString(organization.getPosts());
@@ -106,7 +102,7 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
     public Organization getObject(Map<String, AttributeValue> item) {
         Organization organization = new Organization();
         if (item != null && !item.isEmpty()) {
-            Stream.of(AbstractBaseEntity.class.getDeclaredFields(), Organization.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
+            Stream.of(Organization.class.getDeclaredFields()).forEach(field -> {
                 try {
                     if (item.containsKey(field.getName())) {
                         field.setAccessible(true);
@@ -140,5 +136,10 @@ public class OrganizationRepository extends AbstractBaseRepository<Organization>
     @Override
     public List<String> getColumns() {
         return columns;
+    }
+
+    @Override
+    public String getKeySchema() {
+        return KEY_SCHEMA;
     }
 }

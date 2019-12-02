@@ -38,8 +38,7 @@ public class UserController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public CompletionStage<List<User>> add(@MultipartForm User user) {
-        service.add(user);
-        return getAll();
+    public CompletionStage<User> add(@MultipartForm User user) {
+        return service.add(user);
     }
 }

@@ -7,7 +7,6 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -24,13 +23,12 @@ public class OrganizationService {
                 .thenApply(res -> res.items().stream().map(organizationRepository::getObject).collect(Collectors.toList()));
     }
 
-    public CompletableFuture<List<Organization>> add(Organization organization) {
-        organization.setId(UUID.randomUUID().toString());
-        return dynamoDB.putItem(organizationRepository.putRequest(organization)).thenCompose(ret -> findAll());
+    public CompletableFuture<Organization> add(Organization organization) {
+        return dynamoDB.putItem(organizationRepository.putRequest(organization)).thenApply(response -> organizationRepository.getObject(response.attributes()));
     }
 
-    public CompletableFuture<List<Organization>> update(Organization organization) {
-        return dynamoDB.updateItem(organizationRepository.update(organization)).thenCompose(ret -> findAll());
+    public CompletableFuture<Organization> update(Organization organization) {
+        return dynamoDB.updateItem(organizationRepository.update(organization)).thenApply(response -> organizationRepository.getObject(response.attributes()));
     }
 
     public CompletableFuture<Organization> getById(String id) {

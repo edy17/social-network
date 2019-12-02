@@ -20,6 +20,7 @@ public class UserRepository extends AbstractBaseRepository<User> {
 
     private static Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.UserRepository");
     private static final String TABLE_NAME = "User";
+    private static final String KEY_SCHEMA = "id";
     private static final List<String> columns = Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).map(Field::getName).collect(Collectors.toList());
 
     @Override
@@ -27,6 +28,7 @@ public class UserRepository extends AbstractBaseRepository<User> {
         Map<String, AttributeValue> item = new HashMap<>();
         Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
             try {
+                field.setAccessible(true);
                 if (field.get(user) != null) {
                     item.put(field.getName(), AttributeValue.builder().s((String) field.get(user)).build());
                 }
@@ -65,5 +67,10 @@ public class UserRepository extends AbstractBaseRepository<User> {
     @Override
     public List<String> getColumns() {
         return columns;
+    }
+
+    @Override
+    public String getKeySchema() {
+        return KEY_SCHEMA;
     }
 }
