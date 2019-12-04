@@ -1,6 +1,5 @@
 package org.diehl.spatium.repository;
 
-import org.diehl.spatium.model.AbstractBaseEntity;
 import org.diehl.spatium.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +20,12 @@ public class UserRepository extends AbstractBaseRepository<User> {
     private static Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.UserRepository");
     private static final String TABLE_NAME = "User";
     private static final String KEY_SCHEMA = "id";
-    private static final List<String> columns = Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).map(Field::getName).collect(Collectors.toList());
+    private static final List<String> columns = Stream.of(User.class.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
 
     @Override
     public PutItemRequest putRequest(User user) {
         Map<String, AttributeValue> item = new HashMap<>();
-        Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
+        Stream.of(User.class.getDeclaredFields()).forEach(field -> {
             try {
                 field.setAccessible(true);
                 if (field.get(user) != null) {
@@ -46,7 +45,7 @@ public class UserRepository extends AbstractBaseRepository<User> {
     public User getObject(Map<String, AttributeValue> item) {
         User user = new User();
         if (item != null && !item.isEmpty()) {
-            Stream.of(AbstractBaseEntity.class.getDeclaredFields(), User.class.getDeclaredFields()).flatMap(Stream::of).forEach(field -> {
+            Stream.of(User.class.getDeclaredFields()).forEach(field -> {
                 try {
                     if (item.containsKey(field.getName())) {
                         field.setAccessible(true);

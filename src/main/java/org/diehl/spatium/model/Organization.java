@@ -3,22 +3,16 @@ package org.diehl.spatium.model;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @RegisterForReflection
-public class Organization {
+public class Organization implements Serializable {
 
     private String name;
     private List<String> posts;
     private List<String> users;
-
-    public Organization(String name) {
-        this.name = name;
-    }
-
-    public Organization() {
-
-    }
 
     public String getName() {
         return name;
@@ -42,5 +36,18 @@ public class Organization {
 
     public void setUsers(List<String> users) {
         this.users = users;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Organization)) return false;
+        Organization that = (Organization) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

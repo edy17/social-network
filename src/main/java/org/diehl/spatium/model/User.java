@@ -7,10 +7,13 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Objects;
 
 @RegisterForReflection
-public class User extends AbstractBaseEntity {
+public class User implements Serializable {
 
+    private String id;
     @Size(max = 20, min = 3, message = "{user.username.invalid}")
     @NotNull(message = "Please enter username")
     private String username;
@@ -21,6 +24,14 @@ public class User extends AbstractBaseEntity {
     @Email(message = "{user.email.invalid}")
     @NotNull(message = "Please enter email")
     private String email;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -44,5 +55,18 @@ public class User extends AbstractBaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User that = (User) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

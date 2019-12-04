@@ -8,11 +8,14 @@ import org.joda.time.DateTime;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @RegisterForReflection
-public class Post extends AbstractBaseEntity {
+public class Post implements Serializable {
 
+    private String id;
     private String description;
     @JsonIgnore
     @NotNull(message = "Please set an image")
@@ -25,6 +28,14 @@ public class Post extends AbstractBaseEntity {
     @NotNull(message = "Please set user")
     private String userId;
     private List<Comment> comments;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getDescription() {
         return description;
@@ -90,5 +101,18 @@ public class Post extends AbstractBaseEntity {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Post)) return false;
+        Post that = (Post) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

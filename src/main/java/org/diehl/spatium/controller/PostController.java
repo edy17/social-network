@@ -14,8 +14,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
 
 
 @Path("/posts")
@@ -40,7 +42,7 @@ public class PostController {
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public CompletionStage<Post> add(@MultipartForm Post post) {
+    public CompletionStage<Post> add(@MultipartForm Post post) throws IOException, ExecutionException, InterruptedException {
         return service.add(post);
     }
 
