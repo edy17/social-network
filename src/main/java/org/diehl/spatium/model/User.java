@@ -14,6 +14,7 @@ import java.util.Objects;
 public class User implements Serializable {
 
     private String id;
+
     @Size(max = 20, min = 3, message = "{user.username.invalid}")
     @NotNull(message = "Please enter username")
     private String username;

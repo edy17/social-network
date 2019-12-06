@@ -1,7 +1,7 @@
 package org.diehl.spatium.controller;
 
-import org.diehl.spatium.model.User;
-import org.diehl.spatium.service.UserService;
+import org.diehl.spatium.model.Organization;
+import org.diehl.spatium.service.OrganizationService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.inject.Inject;
@@ -15,28 +15,27 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
-
-@Path("/users")
+@Path("/organizations")
 @Produces(MediaType.APPLICATION_JSON)
-public class UserController {
+public class OrganizationController {
 
     @Inject
-    UserService service;
+    OrganizationService service;
 
     @GET
-    public CompletionStage<List<User>> getAll() {
+    public CompletionStage<List<Organization>> getAll() {
         return service.findAll();
     }
 
     @GET
     @Path("{id}")
-    public CompletionStage<User> getSingle(@PathParam("id") String id) {
+    public CompletionStage<Organization> getSingle(@PathParam("id") String id) {
         return service.getByKeySchema(id);
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public CompletionStage<User> add(@MultipartForm User user) {
-        return service.add(user);
+    public CompletionStage<Organization> add(@MultipartForm Organization organization) {
+        return service.add(organization);
     }
 }

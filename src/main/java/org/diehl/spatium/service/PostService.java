@@ -1,83 +1,93 @@
 package org.diehl.spatium.service;
 
-import org.diehl.spatium.model.Organization;
 import org.diehl.spatium.model.Post;
 import org.diehl.spatium.repository.PostRepository;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
+import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.imageio.ImageIO;
 import javax.inject.Inject;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.ws.rs.NotAuthorizedException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @ApplicationScoped
 public class PostService {
-
-    private static final Logger logger = LoggerFactory.getLogger("org.diehl.spatium.service.PostService");
-
-
-    private static final int IMG_WIDTH = 280;
-    private static final int IMG_HEIGHT = 350;
 
     @Inject
     DynamoDbAsyncClient dynamoDB;
     @Inject
     PostRepository postRepository;
-    @Inject
-    OrganizationService organizationService;
 
-    public CompletableFuture<List<Post>> findAll() {
-        return dynamoDB.scan(postRepository.scanRequest())
-                .thenApply(res -> res.items().stream().map(postRepository::getObject).collect(Collectors.toList()));
+
+    public CompletableFuture<List<Post>> findByPublic() {
+        return dynamoDB.scan(postRepository.scanByPublicRequest(null))
+                .thenApply(res -> {
+                    Map<String, AttributeValue> lastKeyEvaluated = res.lastEvaluatedKey();
+                    Stream<Post> postStream = res.items().stream().map(postRepository::getObject);
+                    while (!lastKeyEvaluated.isEmpty()) {
+                        AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Post>> nextPage
+                                = this.getPage(postRepository.scanByPublicRequest(lastKeyEvaluated)).join();
+                        lastKeyEvaluated = nextPage.getKey();
+                        postStream = Stream.concat(postStream, nextPage.getValue());
+                    }
+                    return postStream.collect(Collectors.toList());
+                });
     }
 
-    public CompletableFuture<Post> getById(String id) {
-        return dynamoDB.getItem(postRepository.getByIdRequest(id))
+    public CompletableFuture<List<Post>> findByOrganization(String organizationId) {
+        return dynamoDB.scan(postRepository.scanByOrganization(organizationId, null))
+                .thenApply(response -> {
+                    Stream<Post> postStream = response.items().stream().map(postRepository::getObject);
+                    Map<String, AttributeValue> lastKeyEvaluated = response.lastEvaluatedKey();
+                    while (!lastKeyEvaluated.isEmpty()) {
+                        AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Post>> nextPage
+                                = this.getPage(postRepository.scanByOrganization(organizationId, lastKeyEvaluated)).join();
+                        lastKeyEvaluated = nextPage.getKey();
+                        postStream = Stream.concat(postStream, nextPage.getValue());
+                    }
+                    return postStream.collect(Collectors.toList());
+                });
+    }
+
+    private CompletableFuture<AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Post>>> getPage(ScanRequest scanRequest) {
+        return dynamoDB.scan(scanRequest)
+                .thenApply(response -> {
+                    Stream<Post> postStream = response.items().stream().map(postRepository::getObject);
+                    return new AbstractMap.SimpleImmutableEntry<>(response.lastEvaluatedKey(), postStream);
+                });
+    }
+
+    public CompletableFuture<Post> getByKeySchema(String keySchema) {
+        return dynamoDB.getItem(postRepository.getByKeySchemaRequest(keySchema))
                 .thenApply(response -> postRepository.getObject(response.item()));
     }
 
-    public CompletableFuture<Post> add(Post post) throws IOException, ExecutionException, InterruptedException {
-        Organization organization = organizationService.getById(post.getOrganizationId()).join();
-        post.setId(UUID.randomUUID().toString());
-        post.setInstant(new DateTime(DateTimeZone.UTC));
-        InputStream in = new ByteArrayInputStream(post.getImage());
-        BufferedImage originalImage = ImageIO.read(in);
-        int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
-        BufferedImage resizeImage = resizeImage(originalImage, type);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(resizeImage, "png", baos);
-        baos.flush();
-        post.setImage(baos.toByteArray());
-        baos.close();
-        List<String> posts = new ArrayList<>();
-        if(organization.getPosts()!=null) {
-            posts.addAll(organization.getPosts());
-        }
-        organization.setPosts(posts);
-        organizationService.update(organization).join();
-        return dynamoDB.putItem(postRepository.putRequest(post)).thenApply(response -> postRepository.getObject(response.attributes()));
+    public CompletableFuture<Post> addPublicPost(Post p) {
+        p.setId(UUID.randomUUID().toString());
+        p.setInstant(new Date());
+        p.setPublic(true);
+        return dynamoDB.putItem(postRepository.putRequest(p))
+                .thenApply(response -> postRepository.getObject(response.attributes()));
     }
 
-    private BufferedImage resizeImage(BufferedImage originalImage, int type) {
-        BufferedImage resizedImage = new BufferedImage(IMG_WIDTH, IMG_HEIGHT, type);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, IMG_WIDTH, IMG_HEIGHT, null);
-        g.dispose();
-        return resizedImage;
+    public CompletableFuture<Post> addPublicComment(String postId, String commentId) {
+        Post post = getByKeySchema(postId).join();
+        if (post.isPublic()) {
+            ArrayList<String> commentIds = new ArrayList<>(post.getCommentIds());
+            commentIds.add(commentId);
+            post.setCommentIds(commentIds);
+            return dynamoDB.updateItem(postRepository.addCommentRequest(post)).thenApply(response -> postRepository.getObject(response.attributes()));
+        }
+        throw new NotAuthorizedException("Not authorized comment attempt");
     }
+
 }

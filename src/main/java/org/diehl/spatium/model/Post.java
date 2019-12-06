@@ -1,5 +1,6 @@
 package org.diehl.spatium.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
@@ -9,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,18 +19,19 @@ import java.util.Objects;
 public class Post implements Serializable {
 
     private String id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private Date instant;
     private String description;
     @JsonIgnore
     @NotNull(message = "Please set an image")
     private byte[] image;
-    private DateTime instant;
-    private boolean isVisible;
+    @JsonIgnore
+    private boolean isPublic = true;
     private int reportsNumber;
-    @NotNull(message = "Please set organization")
     private String organizationId;
     @NotNull(message = "Please set user")
     private String userId;
-    private List<Comment> comments;
+    private List<String> commentIds;
 
     public String getId() {
         return id;
@@ -55,20 +59,20 @@ public class Post implements Serializable {
         this.image = image;
     }
 
-    public DateTime getInstant() {
+    public Date getInstant() {
         return instant;
     }
 
-    public void setInstant(DateTime instant) {
+    public void setInstant(Date instant) {
         this.instant = instant;
     }
 
-    public boolean isVisible() {
-        return isVisible;
+    public boolean isPublic() {
+        return isPublic;
     }
 
-    public void setVisible(boolean visible) {
-        isVisible = visible;
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
     }
 
     public int getReportsNumber() {
@@ -79,12 +83,15 @@ public class Post implements Serializable {
         this.reportsNumber = reportsNumber;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public List<String> getCommentIds() {
+        if (commentIds == null) {
+            return new ArrayList<>();
+        }
+        return commentIds;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public void setCommentIds(List<String> commentIds) {
+        this.commentIds = commentIds;
     }
 
     public String getOrganizationId() {

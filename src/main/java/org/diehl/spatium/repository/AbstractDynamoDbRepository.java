@@ -15,13 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractBaseRepository<T> {
+public abstract class AbstractDynamoDbRepository<T> {
 
-    public ScanRequest scanRequest() {
-        return ScanRequest.builder().tableName(this.getTableName()).attributesToGet(this.getColumns()).build();
+    public ScanRequest scanRequest(Map<String, AttributeValue> lastKey) {
+        return ScanRequest.builder()
+                .tableName(this.getTableName())
+                .attributesToGet(this.getColumns())
+                .exclusiveStartKey(lastKey)
+                .build();
     }
 
-    public GetItemRequest getByIdRequest(String id) {
+
+    public GetItemRequest getByKeySchemaRequest(String id) {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put(getKeySchema(), AttributeValue.builder().s(id).build());
         return GetItemRequest.builder()
@@ -42,8 +47,8 @@ public abstract class AbstractBaseRepository<T> {
                         .keyType(KeyType.HASH)
                         .build())
                 .provisionedThroughput(ProvisionedThroughput.builder()
-                        .readCapacityUnits(5L)
-                        .writeCapacityUnits(5L)
+                        .readCapacityUnits(30L)
+                        .writeCapacityUnits(30L)
                         .build())
                 .tableName(getTableName())
                 .build();

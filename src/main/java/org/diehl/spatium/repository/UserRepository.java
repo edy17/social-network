@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class UserRepository extends AbstractBaseRepository<User> {
+public class UserRepository extends AbstractDynamoDbRepository<User> {
 
     private static Logger logger = LoggerFactory.getLogger("org.diehl.spatium.repository.UserRepository");
     private static final String TABLE_NAME = "User";
@@ -25,14 +26,15 @@ public class UserRepository extends AbstractBaseRepository<User> {
     @Override
     public PutItemRequest putRequest(User user) {
         Map<String, AttributeValue> item = new HashMap<>();
-        Stream.of(User.class.getDeclaredFields()).forEach(field -> {
+        Arrays.asList(User.class.getDeclaredFields()).forEach(field -> {
             try {
                 field.setAccessible(true);
                 if (field.get(user) != null) {
                     item.put(field.getName(), AttributeValue.builder().s((String) field.get(user)).build());
                 }
-            } catch (Exception e) {
-                logger.error("An exception occurred!", e);
+            } catch (IllegalAccessException e) {
+                logger.error("An exception occurred when accede field " + field.getName()
+                        + " of User object by reflection!", e);
             }
         });
         return PutItemRequest.builder()
@@ -45,14 +47,15 @@ public class UserRepository extends AbstractBaseRepository<User> {
     public User getObject(Map<String, AttributeValue> item) {
         User user = new User();
         if (item != null && !item.isEmpty()) {
-            Stream.of(User.class.getDeclaredFields()).forEach(field -> {
+            Arrays.asList(User.class.getDeclaredFields()).forEach(field -> {
                 try {
                     if (item.containsKey(field.getName())) {
                         field.setAccessible(true);
                         field.set(user, item.get(field.getName()).s());
                     }
-                } catch (Exception e) {
-                    logger.error("An exception occurred!", e);
+                } catch (IllegalAccessException e) {
+                    logger.error("An exception occurred when accede field " + field.getName()
+                            + " of User object by reflection!", e);
                 }
             });
         }

@@ -1,7 +1,7 @@
 package org.diehl.spatium.controller;
 
-import org.diehl.spatium.model.User;
-import org.diehl.spatium.service.UserService;
+import org.diehl.spatium.model.Comment;
+import org.diehl.spatium.service.CommentService;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 
 import javax.inject.Inject;
@@ -15,28 +15,22 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
-
-@Path("/users")
+@Path("/comments")
 @Produces(MediaType.APPLICATION_JSON)
-public class UserController {
+public class CommentController {
 
     @Inject
-    UserService service;
-
-    @GET
-    public CompletionStage<List<User>> getAll() {
-        return service.findAll();
-    }
+    CommentService service;
 
     @GET
     @Path("{id}")
-    public CompletionStage<User> getSingle(@PathParam("id") String id) {
-        return service.getByKeySchema(id);
+    public CompletionStage<List<Comment>> getPublicCommentByPostId(@PathParam("id") String id) {
+        return service.findByPublicPost(id);
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public CompletionStage<User> add(@MultipartForm User user) {
-        return service.add(user);
+    public CompletionStage<Comment> addPublicComment(@MultipartForm Comment comment) {
+        return service.addPublicComment(comment);
     }
 }

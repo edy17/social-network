@@ -4,6 +4,7 @@ package org.diehl.spatium.model;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,8 +12,9 @@ import java.util.Objects;
 public class Organization implements Serializable {
 
     private String name;
-    private List<String> posts;
-    private List<String> users;
+    private String userIdOfAdmin;
+    private List<String> postIds;
+    private List<String> userIdsOfMembers;
 
     public String getName() {
         return name;
@@ -22,20 +24,34 @@ public class Organization implements Serializable {
         this.name = name;
     }
 
-    public List<String> getPosts() {
-        return posts;
+    public String getUserIdOfAdmin() {
+        return userIdOfAdmin;
     }
 
-    public void setPosts(List<String> posts) {
-        this.posts = posts;
+    public void setUserIdOfAdmin(String userIdOfAdmin) {
+        this.userIdOfAdmin = userIdOfAdmin;
     }
 
-    public List<String> getUsers() {
-        return users;
+    public List<String> getPostIds() {
+        if (postIds == null) {
+            return new ArrayList<>();
+        }
+        return postIds;
     }
 
-    public void setUsers(List<String> users) {
-        this.users = users;
+    public void setPostIds(List<String> postIds) {
+        this.postIds = postIds;
+    }
+
+    public List<String> getUserIdsOfMembers() {
+        if (userIdsOfMembers == null) {
+            return new ArrayList<>();
+        }
+        return userIdsOfMembers;
+    }
+
+    public void setUserIdsOfMembers(List<String> userIdsOfMembers) {
+        this.userIdsOfMembers = userIdsOfMembers;
     }
 
     @Override
