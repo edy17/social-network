@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.jboss.resteasy.annotations.providers.multipart.PartType;
-import org.joda.time.DateTime;
 
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;

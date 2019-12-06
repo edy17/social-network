@@ -12,7 +12,7 @@ Resources:
     Properties:
       Handler: io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest
       Runtime: java8
-      CodeUri: s3://edy-bucket/e999b85af857fae93e1971f98c75b261
+      CodeUri: s3://edy-bucket/15b1d1f1304fc98b1aa1e928a95acb50
       MemorySize: 512
       Policies: AWSLambdaBasicExecutionRole
       Timeout: 15
@@ -26,6 +26,6 @@ Outputs:
   LambdaHttpApi:
     Description: URL for application
     Value:
-      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/posts
     Export:
       Name: LambdaHttpApi

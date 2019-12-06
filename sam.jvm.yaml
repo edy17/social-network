@@ -27,6 +27,6 @@ Resources:
 Outputs:
   LambdaHttpApi:
     Description: URL for application
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/posts'
     Export:
       Name: LambdaHttpApi

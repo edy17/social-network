@@ -47,8 +47,8 @@ public abstract class AbstractDynamoDbRepository<T> {
                         .keyType(KeyType.HASH)
                         .build())
                 .provisionedThroughput(ProvisionedThroughput.builder()
-                        .readCapacityUnits(30L)
-                        .writeCapacityUnits(30L)
+                        .readCapacityUnits(10L)
+                        .writeCapacityUnits(10L)
                         .build())
                 .tableName(getTableName())
                 .build();

@@ -2,7 +2,6 @@ package org.diehl.spatium.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import org.joda.time.DateTime;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
