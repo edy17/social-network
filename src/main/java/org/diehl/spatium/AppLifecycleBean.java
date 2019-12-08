@@ -2,21 +2,21 @@ package org.diehl.spatium;
 
 import io.quarkus.runtime.ShutdownEvent;
 import io.quarkus.runtime.StartupEvent;
-import org.diehl.spatium.model.Comment;
-import org.diehl.spatium.model.Organization;
-import org.diehl.spatium.model.Post;
-import org.diehl.spatium.model.User;
-import org.diehl.spatium.service.CommentService;
-import org.diehl.spatium.service.InitRepositoryService;
-import org.diehl.spatium.service.OrganizationService;
-import org.diehl.spatium.service.PostService;
-import org.diehl.spatium.service.UserService;
+import org.diehl.spatium.application.SpatiumAPI;
+import org.diehl.spatium.domain.model.Comment;
+import org.diehl.spatium.domain.model.Organization;
+import org.diehl.spatium.domain.model.Post;
+import org.diehl.spatium.domain.model.User;
+import org.diehl.spatium.infrastructure.dynamodb.service.InitRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -30,18 +30,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @ApplicationScoped
 public class AppLifecycleBean {
 
-    private static final Logger logger = LoggerFactory.getLogger("org.diehl.spatium.AppLifecycleBean");
+    private static final Logger logger = LoggerFactory.getLogger(AppLifecycleBean.class);
 
     @Inject
     InitRepositoryService initRepositoryService;
     @Inject
-    PostService postService;
-    @Inject
-    UserService userService;
-    @Inject
-    OrganizationService organizationService;
-    @Inject
-    CommentService commentService;
+    SpatiumAPI spatiumAPI;
+
+    @Produces
+    @ApplicationScoped
+    public Validator getValidator() {
+        return Validation.buildDefaultValidatorFactory().getValidator();
+    }
 
 
     void onStart(@Observes StartupEvent event) {
@@ -78,7 +78,7 @@ public class AppLifecycleBean {
             Organization organization = new Organization();
             organization.setName(organizationName);
             organization.setUserIdsOfMembers(Collections.singletonList(user.getId()));
-            Organization tmp = organizationService.add(organization).join();
+            Organization tmp = spatiumAPI.addOrganization(organization).join();
             if (tmp != null) {
                 logger.info("Creating new organization done... {}", tmp);
                 createRandomPosts(randomGenerator, user, organization);
@@ -94,7 +94,7 @@ public class AppLifecycleBean {
         u.setPassword(new String(randomGenerator, StandardCharsets.UTF_8));
         new Random().nextBytes(randomGenerator);
         u.setEmail(new String(randomGenerator, StandardCharsets.UTF_8));
-        userService.add(u).join();
+        spatiumAPI.addUser(u).join();
         logger.info("Creating new user... {}", u);
         return u;
     }
@@ -120,8 +120,7 @@ public class AppLifecycleBean {
             p.setReportsNumber(0);
             p.setUserId(u.getId());
             p.setOrganizationId(organization.getName());
-            postService.addPublicPost(p).join();
-            organizationService.addPost(organization.getName(), p.getId());
+            spatiumAPI.addPost(p).join();
             logger.info("Creating new post done... {}", p);
             createRandomComments(randomGenerator, u, p);
         }
@@ -134,7 +133,7 @@ public class AppLifecycleBean {
             c.setContent(new String(randomGenerator, StandardCharsets.UTF_8));
             c.setUserId(u.getId());
             c.setPostId(p.getId());
-            commentService.addPublicComment(c).join();
+            spatiumAPI.addComment(c).join();
             logger.info("Creating new comment done... {}", c);
             try {
                 TimeUnit.SECONDS.sleep(2);

@@ -4,6 +4,7 @@ dependency-reduced-pom.xml
 .factorypath
 log.txt
 target
+output-sam.yaml
 .classpath
 .project
 unpack
