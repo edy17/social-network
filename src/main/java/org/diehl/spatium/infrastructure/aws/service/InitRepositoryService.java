@@ -1,9 +1,9 @@
-package org.diehl.spatium.infrastructure.dynamodb.service;
+package org.diehl.spatium.infrastructure.aws.service;
 
-import org.diehl.spatium.infrastructure.dynamodb.repository.CommentRepository;
-import org.diehl.spatium.infrastructure.dynamodb.repository.OrganizationRepository;
-import org.diehl.spatium.infrastructure.dynamodb.repository.PostRepository;
-import org.diehl.spatium.infrastructure.dynamodb.repository.UserRepository;
+import org.diehl.spatium.infrastructure.aws.dynamodb.CommentDynamoDbRepository;
+import org.diehl.spatium.infrastructure.aws.dynamodb.OrganizationDynamoDbRepository;
+import org.diehl.spatium.infrastructure.aws.dynamodb.PostDynamoDbRepository;
+import org.diehl.spatium.infrastructure.aws.dynamodb.UserDynamoDbRepository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableResponse;
@@ -25,28 +25,28 @@ public class InitRepositoryService {
     @Inject
     DynamoDbAsyncClient dynamoDB;
     @Inject
-    PostRepository postRepository;
+    PostDynamoDbRepository postDynamoDbRepository;
     @Inject
-    UserRepository userRepository;
+    UserDynamoDbRepository userDynamoDbRepository;
     @Inject
-    OrganizationRepository organizationRepository;
+    OrganizationDynamoDbRepository organizationDynamoDbRepository;
     @Inject
-    CommentRepository commentRepository;
+    CommentDynamoDbRepository commentDynamoDbRepository;
 
     public CreateTableResponse createTable(String dynamodbTableName) {
         CreateTableRequest createTableRequest;
         switch (dynamodbTableName) {
             case "Organization":
-                createTableRequest = organizationRepository.createTableRequest();
+                createTableRequest = organizationDynamoDbRepository.createTableRequest();
                 break;
             case "User":
-                createTableRequest = userRepository.createTableRequest();
+                createTableRequest = userDynamoDbRepository.createTableRequest();
                 break;
             case "Post":
-                createTableRequest = postRepository.createTableRequest();
+                createTableRequest = postDynamoDbRepository.createTableRequest();
                 break;
             case "Comment":
-                createTableRequest = commentRepository.createTableRequest();
+                createTableRequest = commentDynamoDbRepository.createTableRequest();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + dynamodbTableName);

@@ -7,11 +7,10 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 import java.util.Objects;
 
 @RegisterForReflection
-public class User implements Serializable {
+public class User {
 
     private String id;
     @Size(max = 20, min = 3, message = "{user.username.invalid}")

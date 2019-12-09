@@ -47,12 +47,12 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-undertow</artifactId>
         </dependency>
-        <!--Serveless-->
+        <!--Aws-Serverless-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-amazon-lambda-http</artifactId>
         </dependency>
-        <!--DynamoDB-->
+        <!--Aws-DynamoDB-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-amazon-dynamodb</artifactId>
@@ -64,6 +64,12 @@
         <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>netty-nio-client</artifactId>
+        </dependency>
+        <!--Aws-S3-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-camel-aws-s3</artifactId>
+            <version>0.19.1</version>
         </dependency>
     </dependencies>
     <build>

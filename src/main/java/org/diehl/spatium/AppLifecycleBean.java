@@ -7,17 +7,13 @@ import org.diehl.spatium.domain.model.Comment;
 import org.diehl.spatium.domain.model.Organization;
 import org.diehl.spatium.domain.model.Post;
 import org.diehl.spatium.domain.model.User;
-import org.diehl.spatium.infrastructure.dynamodb.service.InitRepositoryService;
+import org.diehl.spatium.infrastructure.aws.service.InitRepositoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
-import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -36,13 +32,6 @@ public class AppLifecycleBean {
     InitRepositoryService initRepositoryService;
     @Inject
     SpatiumAPI spatiumAPI;
-
-    @Produces
-    @ApplicationScoped
-    public Validator getValidator() {
-        return Validation.buildDefaultValidatorFactory().getValidator();
-    }
-
 
     void onStart(@Observes StartupEvent event) {
         logger.info("The application is starting... {}", event);
@@ -100,23 +89,13 @@ public class AppLifecycleBean {
     }
 
     private void createRandomPosts(byte[] randomGenerator, User u, Organization organization) {
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("img/image.jpg");
-        byte[] unknownImage = new byte[0];
-        int bytes = 0;
-        if (inputStream != null) {
-            try {
-                unknownImage = new byte[inputStream.available()];
-                bytes = inputStream.read(unknownImage);
-            } catch (IOException e) {
-                logger.error("An exception occurred when read test image!", e);
-            }
-            logger.info("Unknown Image was read in {} bytes... ", bytes);
-        }
         for (int i = 0; i < 2; i++) {
+            InputStream inputStream = getClass().getClassLoader().getResourceAsStream("img/image.jpg");
+            logger.info("Unknown Image was read... ");
             Post p = new Post();
             new Random().nextBytes(randomGenerator);
             p.setDescription(new String(randomGenerator, StandardCharsets.UTF_8));
-            p.setImage(unknownImage);
+            p.setImage(inputStream);
             p.setReportsNumber(0);
             p.setUserId(u.getId());
             p.setOrganizationId(organization.getName());

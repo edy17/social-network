@@ -1,4 +1,4 @@
-package org.diehl.spatium.infrastructure.dynamodb.mapper;
+package org.diehl.spatium.infrastructure.aws.mapper;
 
 import org.diehl.spatium.domain.model.Comment;
 import org.slf4j.Logger;
@@ -13,10 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ApplicationScoped
-public class CommentDynamoMapper {
+public class CommentDynamoDbMapper {
 
-    private static Logger logger = LoggerFactory.getLogger(CommentDynamoMapper.class);
-    private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+    private static Logger logger = LoggerFactory.getLogger(CommentDynamoDbMapper.class);
+    private SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
     public Map<String, AttributeValue> toDynamoDbItem(Comment comment) {
         Map<String, AttributeValue> item = new HashMap<>();

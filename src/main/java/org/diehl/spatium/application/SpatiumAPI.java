@@ -13,9 +13,9 @@ import org.diehl.spatium.domain.service.UserService;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletableFuture;
 
 @ApplicationScoped
@@ -65,6 +65,10 @@ public class SpatiumAPI {
 
     public CompletableFuture<Post> addPost(Post post) {
         return postService.add(post);
+    }
+
+    public InputStream getImage(String key) {
+        return postService.getImage(key);
     }
 
     public CompletableFuture<List<Comment>> findCommentsByPostId(String id) {

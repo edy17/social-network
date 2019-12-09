@@ -1,8 +1,6 @@
-package org.diehl.spatium.infrastructure.dynamodb.repository;
+package org.diehl.spatium.infrastructure.aws.dynamodb;
 
 import org.diehl.spatium.domain.model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
@@ -14,11 +12,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class UserRepository extends AbstractDynamoDbRepository<User> {
+public class UserDynamoDbRepository implements AbstractDynamoDbRepository<User> {
 
     private static final String TABLE_NAME = "User";
     private static final String KEY_SCHEMA = "id";
-    private static final List<String> columns = Stream.of(User.class.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
+    private static final List<String> columns = Stream.of(User.class.getDeclaredFields())
+            .map(Field::getName).collect(Collectors.toList());
 
     @Override
     public PutItemRequest putRequest(Map<String, AttributeValue> item) {
@@ -28,6 +27,7 @@ public class UserRepository extends AbstractDynamoDbRepository<User> {
                 .build();
     }
 
+    @Override
     public String getTableName() {
         return TABLE_NAME;
     }

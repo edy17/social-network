@@ -1,9 +1,9 @@
-package org.diehl.spatium.infrastructure.dynamodb.service;
+package org.diehl.spatium.infrastructure.aws.service;
 
 import org.diehl.spatium.domain.model.User;
 import org.diehl.spatium.domain.service.UserService;
-import org.diehl.spatium.infrastructure.dynamodb.mapper.UserDynamoMapper;
-import org.diehl.spatium.infrastructure.dynamodb.repository.UserRepository;
+import org.diehl.spatium.infrastructure.aws.mapper.UserDynamoDbMapper;
+import org.diehl.spatium.infrastructure.aws.dynamodb.UserDynamoDbRepository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
@@ -19,20 +19,20 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class UserDynamoService implements UserService {
+public class UserAwsService implements UserService {
 
     @Inject
     DynamoDbAsyncClient dynamoDB;
     @Inject
-    UserRepository userRepository;
+    UserDynamoDbRepository userDynamoDbRepository;
     @Inject
-    UserDynamoMapper userDynamoMapper;
+    UserDynamoDbMapper userDynamoDbMapper;
 
     private CompletableFuture<AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<User>>>
     getPage(ScanRequest scanRequest) {
         return dynamoDB.scan(scanRequest)
                 .thenApply(response -> {
-                    Stream<User> userStream = response.items().stream().map(userDynamoMapper::toUser);
+                    Stream<User> userStream = response.items().stream().map(userDynamoDbMapper::toUser);
                     return new AbstractMap.SimpleImmutableEntry<>(response.lastEvaluatedKey(), userStream);
                 });
     }
@@ -40,18 +40,18 @@ public class UserDynamoService implements UserService {
 
     @Override
     public CompletableFuture<User> findById(String id) {
-        return dynamoDB.getItem(userRepository.getByKeySchemaRequest(id)).thenApply(response -> userDynamoMapper.toUser(response.item()));
+        return dynamoDB.getItem(userDynamoDbRepository.getByKeySchemaRequest(id)).thenApply(response -> userDynamoDbMapper.toUser(response.item()));
     }
 
     @Override
     public CompletableFuture<List<User>> findAll() {
-        return dynamoDB.scan(userRepository.scanRequest(null))
+        return dynamoDB.scan(userDynamoDbRepository.scanRequest(null))
                 .thenApply(res -> {
                     Map<String, AttributeValue> lastKeyEvaluated = res.lastEvaluatedKey();
-                    Stream<User> organizationStream = res.items().stream().map(userDynamoMapper::toUser);
+                    Stream<User> organizationStream = res.items().stream().map(userDynamoDbMapper::toUser);
                     while (!lastKeyEvaluated.isEmpty()) {
                         AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<User>> nextPage
-                                = this.getPage(userRepository.scanRequest(lastKeyEvaluated)).join();
+                                = this.getPage(userDynamoDbRepository.scanRequest(lastKeyEvaluated)).join();
                         lastKeyEvaluated = nextPage.getKey();
                         organizationStream = Stream.concat(organizationStream, nextPage.getValue());
                     }
@@ -62,6 +62,6 @@ public class UserDynamoService implements UserService {
     @Override
     public CompletableFuture<User> add(User user) {
         user.setId(UUID.randomUUID().toString());
-        return dynamoDB.putItem(userRepository.putRequest(userDynamoMapper.toDynamoDbItem(user))).thenApply(response -> userDynamoMapper.toUser(response.attributes()));
+        return dynamoDB.putItem(userDynamoDbRepository.putRequest(userDynamoDbMapper.toDynamoDbItem(user))).thenApply(response -> userDynamoDbMapper.toUser(response.attributes()));
     }
 }

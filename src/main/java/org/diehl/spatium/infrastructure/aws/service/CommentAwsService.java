@@ -1,10 +1,10 @@
-package org.diehl.spatium.infrastructure.dynamodb.service;
+package org.diehl.spatium.infrastructure.aws.service;
 
 import org.diehl.spatium.domain.model.Comment;
 import org.diehl.spatium.domain.model.Post;
 import org.diehl.spatium.domain.service.CommentService;
-import org.diehl.spatium.infrastructure.dynamodb.mapper.CommentDynamoMapper;
-import org.diehl.spatium.infrastructure.dynamodb.repository.CommentRepository;
+import org.diehl.spatium.infrastructure.aws.mapper.CommentDynamoDbMapper;
+import org.diehl.spatium.infrastructure.aws.dynamodb.CommentDynamoDbRepository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class CommentDynamoService implements CommentService {
+public class CommentAwsService implements CommentService {
 
     @Inject
     DynamoDbAsyncClient dynamoDB;
     @Inject
-    CommentRepository commentRepository;
+    CommentDynamoDbRepository commentDynamoDbRepository;
     @Inject
-    CommentDynamoMapper commentDynamoMapper;
+    CommentDynamoDbMapper commentDynamoMapper;
     @Inject
-    PostDynamoService postDynamoService;
+    PostAwsService postAwsService;
 
     private CompletableFuture<AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Comment>>>
     getPage(ScanRequest scanRequest) {
@@ -44,15 +44,15 @@ public class CommentDynamoService implements CommentService {
 
     @Override
     public CompletableFuture<List<Comment>> findByPostId(String postId) {
-        Post post = postDynamoService.findById(postId).join();
+        Post post = postAwsService.findById(postId).join();
         if (post.isPublic()) {
-            return dynamoDB.scan(commentRepository.scanByPostIdRequest(postId, null))
+            return dynamoDB.scan(commentDynamoDbRepository.scanByPostIdRequest(postId, null))
                     .thenApply(res -> {
                         Map<String, AttributeValue> lastKeyEvaluated = res.lastEvaluatedKey();
                         Stream<Comment> commentStream = res.items().stream().map(commentDynamoMapper::toComment);
                         while (!lastKeyEvaluated.isEmpty()) {
                             AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Comment>> nextPage
-                                    = this.getPage(commentRepository.scanByPostIdRequest(postId, lastKeyEvaluated)).join();
+                                    = this.getPage(commentDynamoDbRepository.scanByPostIdRequest(postId, lastKeyEvaluated)).join();
                             lastKeyEvaluated = nextPage.getKey();
                             commentStream = Stream.concat(commentStream, nextPage.getValue());
                         }
@@ -66,7 +66,7 @@ public class CommentDynamoService implements CommentService {
     public CompletableFuture<Comment> add(Comment comment) {
         comment.setId(UUID.randomUUID().toString());
         comment.setInstant(new Date());
-        return dynamoDB.putItem(commentRepository.putRequest(commentDynamoMapper.toDynamoDbItem(comment)))
+        return dynamoDB.putItem(commentDynamoDbRepository.putRequest(commentDynamoMapper.toDynamoDbItem(comment)))
                 .thenApply(response -> commentDynamoMapper.toComment(response.attributes()));
     }
 }

@@ -1,8 +1,6 @@
-package org.diehl.spatium.infrastructure.dynamodb.repository;
+package org.diehl.spatium.infrastructure.aws.dynamodb;
 
 import org.diehl.spatium.domain.model.Organization;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest;
 
@@ -14,9 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class OrganizationRepository extends AbstractDynamoDbRepository<Organization> {
-
-    private static final Logger logger = LoggerFactory.getLogger(OrganizationRepository.class);
+public class OrganizationDynamoDbRepository implements AbstractDynamoDbRepository<Organization> {
 
     private static final String TABLE_NAME = "Organization";
     private static final String KEY_SCHEMA = "name";

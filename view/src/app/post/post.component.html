@@ -1,42 +1,41 @@
-<div class="col-lg-9 col-md-8 order-md-2" *ngIf="detailedPosts">
-  <div class="container-fluid" *ngFor="let p of detailedPosts;">
-    <mat-card>
-      <mat-card-header>
-        <div mat-card-avatar
-             style="background-image:url('https://material.angular.io/assets/img/examples/shiba1.jpg');background-size: cover;">
-        </div>
-        <mat-card-title>{{p.user.username}}</mat-card-title>
-        <mat-card-subtitle>{{p.post.instant}}</mat-card-subtitle>
-      </mat-card-header>
-      <img mat-card-image style="width: 90%; height: 90%;"
-           src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-      <mat-card-content>
-        <p>
-          {{p.post.description}}
-        </p>
-      </mat-card-content>
-      <mat-card-actions>
-        <button mat-button><i class="icon-heart"></i></button>
-        <button mat-button (click)="clickOnComments(p)"><i class="icon-message-square"></i></button>
-      </mat-card-actions>
-      <mat-card-footer>
-        <mat-expansion-panel [expanded]="p.isExpanded" hideToggle class="mat-elevation-z0">
-          <ul class="widget-featured-posts" *ngIf="p.comments">
-            <mat-card class="entry" *ngFor="let c of p.comments;">
-              <div class="entry-thumb">
-                <img src="https://miro.medium.com/fit/c/256/256/1*gMTuDxQmsldDmMAQpLD_sQ.jpeg" alt="Post">
-              </div>
-              <div class="entry-content">
-                <a href="#">
-                  <span class="entry-meta entry-title">by {{c.user.username}} at {{c.comment.instant}} </span>
-                </a>
-                <p>{{c.comment.content}}</p>
-              </div>
-            </mat-card>
-          </ul>
-        </mat-expansion-panel>
-      </mat-card-footer>
-    </mat-card>
-    <hr class="padding-top-2x mt-2">
-  </div>
+<div class="container-fluid" *ngFor="let p of detailedPosts;">
+  <mat-card>
+    <mat-card-header>
+      <div mat-card-avatar
+           style="background-image:url('https://material.angular.io/assets/img/examples/shiba1.jpg');background-size: cover;">
+      </div>
+      <mat-card-title>{{p.user.username}}</mat-card-title>
+      <mat-card-subtitle>{{p.post.instant}}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image style="width: 90%; height: 90%;"
+         src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+    <mat-card-content>
+      <p>
+        {{p.post.description}}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button><i class="icon-heart"></i></button>
+      <button mat-button (click)="clickOnComments(p)"><i class="icon-message-square"></i></button>
+    </mat-card-actions>
+    <mat-card-footer>
+      <mat-expansion-panel [expanded]="p.isExpanded" hideToggle class="mat-elevation-z0">
+        <ul class="widget-featured-posts" *ngIf="p.comments">
+          <mat-card class="entry" *ngFor="let c of p.comments;">
+            <div class="entry-thumb">
+              <img src="https://miro.medium.com/fit/c/256/256/1*gMTuDxQmsldDmMAQpLD_sQ.jpeg" alt="Post">
+            </div>
+            <div class="entry-content">
+              <a href="#">
+                <span class="entry-meta entry-title">by {{c.user.username}} at {{c.comment.instant}} </span>
+              </a>
+              <p>{{c.comment.content}}</p>
+            </div>
+          </mat-card>
+        </ul>
+      </mat-expansion-panel>
+    </mat-card-footer>
+  </mat-card>
+  <hr class="padding-top-2x mt-2">
 </div>
+

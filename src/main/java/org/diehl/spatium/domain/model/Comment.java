@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @RegisterForReflection
-public class Comment implements Serializable {
+public class Comment {
 
     private String id;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
     private Date instant;
     @NotNull(message = "Please enter a text comment")
     private String content;

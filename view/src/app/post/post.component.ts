@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Post} from "../model/post.model";
 import {SpatiumService} from "../spatium.service";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {DetailedPost} from "../model/detailedPost.model";
-import {DetailedComment} from "../model/DetailedComment.model";
 
 @Component({
   selector: 'app-post',

@@ -8,26 +8,29 @@ import org.jboss.resteasy.annotations.providers.multipart.PartType;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.core.MediaType;
-import java.io.Serializable;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Objects;
 
 @RegisterForReflection
-public class Post implements Serializable {
+public class Post {
 
     private String id;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy hh:mm:ss")
     private Date instant;
     private String description;
-    @JsonIgnore
-    @NotNull(message = "Please set an image")
-    private byte[] image;
-    @JsonIgnore
-    private boolean isPublic = true;
     private int reportsNumber;
     private String organizationId;
+    private String imageKey;
     @NotNull(message = "Please set user")
     private String userId;
+    @JsonIgnore
+    @NotNull(message = "Please set an image")
+    @FormParam("image")
+    @PartType(MediaType.APPLICATION_OCTET_STREAM)
+    private InputStream image;
+    @JsonIgnore
+    private boolean isPublic = true;
 
     public String getId() {
         return id;
@@ -45,14 +48,20 @@ public class Post implements Serializable {
         this.description = description;
     }
 
-    public byte[] getImage() {
+    public InputStream getImage() {
         return image;
     }
 
-    @FormParam("image")
-    @PartType(MediaType.APPLICATION_OCTET_STREAM)
-    public void setImage(byte[] image) {
+    public void setImage(InputStream image) {
         this.image = image;
+    }
+
+    public String getImageKey() {
+        return imageKey;
+    }
+
+    public void setImageKey(String imageKey) {
+        this.imageKey = imageKey;
     }
 
     public Date getInstant() {

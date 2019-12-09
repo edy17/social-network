@@ -1,9 +1,9 @@
-package org.diehl.spatium.infrastructure.dynamodb.service;
+package org.diehl.spatium.infrastructure.aws.service;
 
 import org.diehl.spatium.domain.model.Organization;
 import org.diehl.spatium.domain.service.OrganizationService;
-import org.diehl.spatium.infrastructure.dynamodb.mapper.OrganizationDynamoMapper;
-import org.diehl.spatium.infrastructure.dynamodb.repository.OrganizationRepository;
+import org.diehl.spatium.infrastructure.aws.mapper.OrganizationDynamoDbMapper;
+import org.diehl.spatium.infrastructure.aws.dynamodb.OrganizationDynamoDbRepository;
 import software.amazon.awssdk.services.dynamodb.DynamoDbAsyncClient;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 import software.amazon.awssdk.services.dynamodb.model.ScanRequest;
@@ -18,41 +18,41 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @ApplicationScoped
-public class OrganizationDynamoService implements OrganizationService {
+public class OrganizationAwsService implements OrganizationService {
 
     @Inject
     DynamoDbAsyncClient dynamoDB;
     @Inject
-    OrganizationRepository organizationRepository;
+    OrganizationDynamoDbRepository organizationDynamoDbRepository;
     @Inject
-    OrganizationDynamoMapper organizationDynamoMapper;
+    OrganizationDynamoDbMapper organizationDynamoDbMapper;
 
     private CompletableFuture<AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Organization>>>
     getPage(ScanRequest scanRequest) {
         return dynamoDB.scan(scanRequest)
                 .thenApply(response -> {
                     Stream<Organization> organizationStream = response.items().stream()
-                            .map(organizationDynamoMapper::toOrganization);
+                            .map(organizationDynamoDbMapper::toOrganization);
                     return new AbstractMap.SimpleImmutableEntry<>(response.lastEvaluatedKey(), organizationStream);
                 });
     }
 
     @Override
     public CompletableFuture<Organization> findById(String id) {
-        return dynamoDB.getItem(organizationRepository.getByKeySchemaRequest(id))
-                .thenApply(response -> organizationDynamoMapper.toOrganization(response.item()));
+        return dynamoDB.getItem(organizationDynamoDbRepository.getByKeySchemaRequest(id))
+                .thenApply(response -> organizationDynamoDbMapper.toOrganization(response.item()));
     }
 
     @Override
     public CompletableFuture<List<Organization>> findAll() {
-        return dynamoDB.scan(organizationRepository.scanRequest(null))
+        return dynamoDB.scan(organizationDynamoDbRepository.scanRequest(null))
                 .thenApply(res -> {
                     Map<String, AttributeValue> lastKeyEvaluated = res.lastEvaluatedKey();
                     Stream<Organization> organizationStream = res.items().stream()
-                            .map(organizationDynamoMapper::toOrganization);
+                            .map(organizationDynamoDbMapper::toOrganization);
                     while (!lastKeyEvaluated.isEmpty()) {
                         AbstractMap.SimpleImmutableEntry<Map<String, AttributeValue>, Stream<Organization>> nextPage
-                                = this.getPage(organizationRepository.scanRequest(lastKeyEvaluated)).join();
+                                = this.getPage(organizationDynamoDbRepository.scanRequest(lastKeyEvaluated)).join();
                         lastKeyEvaluated = nextPage.getKey();
                         organizationStream = Stream.concat(organizationStream, nextPage.getValue());
                     }
@@ -62,7 +62,7 @@ public class OrganizationDynamoService implements OrganizationService {
 
     @Override
     public CompletableFuture<Organization> add(Organization organization) {
-        return dynamoDB.putItem(organizationRepository.putRequest(organizationDynamoMapper.toDynamoDbItem(organization)))
-                .thenApply(response -> organizationDynamoMapper.toOrganization(response.attributes()));
+        return dynamoDB.putItem(organizationDynamoDbRepository.putRequest(organizationDynamoDbMapper.toDynamoDbItem(organization)))
+                .thenApply(response -> organizationDynamoDbMapper.toOrganization(response.attributes()));
     }
 }

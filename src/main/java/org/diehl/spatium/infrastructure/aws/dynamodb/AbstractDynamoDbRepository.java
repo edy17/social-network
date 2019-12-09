@@ -1,4 +1,4 @@
-package org.diehl.spatium.infrastructure.dynamodb.repository;
+package org.diehl.spatium.infrastructure.aws.dynamodb;
 
 import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -15,9 +15,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractDynamoDbRepository<T> {
+public interface AbstractDynamoDbRepository<T> {
 
-    public ScanRequest scanRequest(Map<String, AttributeValue> lastKey) {
+    PutItemRequest putRequest(Map<String, AttributeValue> item);
+
+    String getTableName();
+
+    List<String> getColumns();
+
+    String getKeySchema();
+
+    default ScanRequest scanRequest(Map<String, AttributeValue> lastKey) {
         return ScanRequest.builder()
                 .tableName(this.getTableName())
                 .attributesToGet(this.getColumns())
@@ -25,8 +33,7 @@ public abstract class AbstractDynamoDbRepository<T> {
                 .build();
     }
 
-
-    public GetItemRequest getByKeySchemaRequest(String id) {
+    default GetItemRequest getByKeySchemaRequest(String id) {
         Map<String, AttributeValue> item = new HashMap<>();
         item.put(getKeySchema(), AttributeValue.builder().s(id).build());
         return GetItemRequest.builder()
@@ -36,7 +43,7 @@ public abstract class AbstractDynamoDbRepository<T> {
                 .build();
     }
 
-    public CreateTableRequest createTableRequest() {
+    default CreateTableRequest createTableRequest() {
         return CreateTableRequest.builder()
                 .attributeDefinitions(AttributeDefinition.builder()
                         .attributeName(getKeySchema())
@@ -47,18 +54,10 @@ public abstract class AbstractDynamoDbRepository<T> {
                         .keyType(KeyType.HASH)
                         .build())
                 .provisionedThroughput(ProvisionedThroughput.builder()
-                        .readCapacityUnits(10L)
-                        .writeCapacityUnits(10L)
+                        .readCapacityUnits(5L)
+                        .writeCapacityUnits(5L)
                         .build())
                 .tableName(getTableName())
                 .build();
     }
-
-    public abstract PutItemRequest putRequest(Map<String, AttributeValue> item);
-
-    public abstract String getTableName();
-
-    public abstract List<String> getColumns();
-
-    public abstract String getKeySchema();
 }

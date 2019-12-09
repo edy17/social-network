@@ -1,4 +1,4 @@
-package org.diehl.spatium.infrastructure.dynamodb.mapper;
+package org.diehl.spatium.infrastructure.aws.mapper;
 
 import org.diehl.spatium.domain.model.Organization;
 import org.slf4j.Logger;
@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ApplicationScoped
-public class OrganizationDynamoMapper {
+public class OrganizationDynamoDbMapper {
 
-    private static final Logger logger = LoggerFactory.getLogger(OrganizationDynamoMapper.class);
+    private static final Logger logger = LoggerFactory.getLogger(OrganizationDynamoDbMapper.class);
     private static final String USER_IDS_OF_MEMBERS_COLUMN = "userIdsOfMembers";
 
     public Map<String, AttributeValue> toDynamoDbItem(Organization organization) {

@@ -88,8 +88,10 @@
 <!-- Page Content-->
 <div class="container padding-bottom-3x mb-2">
   <div class="row">
-    <router-outlet (activate)="onActivate($event) ">
-    </router-outlet>
+    <div class="col-lg-9 col-md-8 order-md-2">
+      <router-outlet (activate)="onActivate($event) ">
+      </router-outlet>
+    </div>
     <!-- Side Menu-->
     <div class="col-lg-3 col-md-4 order-md-1">
       <div class="padding-top-3x hidden-md-up"></div>
@@ -112,7 +114,7 @@
         <a *ngFor="let organization of spatiumService.organizations;"
            (click)="clickOnOrganization($event, false, organization)"
            [ngClass]="spatiumService.currentOrganization==organization?'active':''"
-           class="list-group-item list-group-item-action" href="#"  data-filter-item="af">
+           class="list-group-item list-group-item-action" href="#" data-filter-item="af">
           {{organization.name}}
         </a>
       </nav>

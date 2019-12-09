@@ -1,5 +1,4 @@
-package org.diehl.spatium.infrastructure.dynamodb.repository;
-
+package org.diehl.spatium.infrastructure.aws.dynamodb;
 
 import org.diehl.spatium.domain.model.Post;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
@@ -14,14 +13,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 @ApplicationScoped
-public class PostRepository extends AbstractDynamoDbRepository<Post> {
+public class PostDynamoDbRepository implements AbstractDynamoDbRepository<Post> {
 
     private static final String TABLE_NAME = "Post";
     private static final String KEY_SCHEMA = "id";
-    private static final List<String> columns = Stream.of(Post.class.getDeclaredFields()).map(Field::getName).collect(Collectors.toList());
-
+    private static final List<String> columns = Stream.of(Post.class.getDeclaredFields())
+            .map(Field::getName).collect(Collectors.toList());
 
     public ScanRequest scanByPublicRequest(Map<String, AttributeValue> lastKey) {
         Map<String, AttributeValue> expressionAttributeValues = new HashMap<>();
@@ -52,7 +50,6 @@ public class PostRepository extends AbstractDynamoDbRepository<Post> {
                 .item(item)
                 .build();
     }
-
 
     @Override
     public String getTableName() {

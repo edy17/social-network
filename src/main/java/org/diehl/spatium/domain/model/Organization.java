@@ -4,13 +4,12 @@ package org.diehl.spatium.domain.model;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @RegisterForReflection
-public class Organization implements Serializable {
+public class Organization {
 
     @NotNull(message = "Please give a name to your organization")
     private String name;

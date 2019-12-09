@@ -45,7 +45,7 @@ public class OrganizationController {
         Set<ConstraintViolation<Organization>> violations = validator.validate(organization);
         if (!violations.isEmpty()) {
             String errors = violations.stream().map(ConstraintViolation::getMessage).collect(Collectors.joining());
-            throw new RuntimeException(errors);
+            throw new IllegalStateException(errors);
         }
         return spatiumAPI.addOrganization(organization);
     }
