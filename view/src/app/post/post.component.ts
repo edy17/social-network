@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {SpatiumService} from "../spatium.service";
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {DetailedPost} from "../model/detailedPost.model";
+import {MappingService} from "./mapping.service";
 
 @Component({
   selector: 'app-post',
@@ -10,6 +11,9 @@ import {DetailedPost} from "../model/detailedPost.model";
 })
 export class PostComponent implements OnInit {
 
+  @ViewChild('rendererCanvas', {static: true})
+  public rendererCanvas: ElementRef<HTMLCanvasElement>;
+
   detailedPosts: Array<DetailedPost>;
   enableEdition: boolean = false;
   currentPost: DetailedPost;
@@ -17,12 +21,17 @@ export class PostComponent implements OnInit {
   currentFileToUpload: File = undefined;
   uploadFileName: string = "Choose new image";
   timeStamp: number = (new Date()).getTime();
-  linkPicture: string = this.spatiumService.host + '/photoProduct/';
+  linkPicture: string = this.spatiumService.host + '/posts/image/';
 
-  constructor(public spatiumService: SpatiumService, public route: ActivatedRoute, private router: Router) {
+  constructor(public spatiumService: SpatiumService, private mappingService: MappingService,
+              public route: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit() {
+    this.mappingService.init(this.rendererCanvas);
+    //render(); // remove when using next line for animation loop (requestAnimationFrame)
+    this.mappingService.animate();
+
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         if (this.route.snapshot.params.p1 == 0) {
@@ -46,9 +55,7 @@ export class PostComponent implements OnInit {
       });
   }
 
-
   clickOnComments(p: DetailedPost) {
     p.isExpanded = !p.isExpanded;
   }
-
 }

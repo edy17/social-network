@@ -7,6 +7,7 @@ export class Post implements Deserializable {
   description: string;
   reportsNumber: number;
   organizationId: string;
+  imageKey: string;
   userId: string;
   public: boolean;
 
