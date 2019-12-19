@@ -1,4 +1,5 @@
 src/main/resources/application.properties
+package-lock.json
 dependency-reduced-pom.xml
 .settings
 .vscode
