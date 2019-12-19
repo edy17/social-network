@@ -24,7 +24,11 @@
   </mat-card>
 </div>
 
-<canvas #rendererCanvas id="renderCanvas" style="background-color: #ccc;color: #000;"></canvas>
+<div #parentCanvas class="container-fluid padding-bottom-1x">
+  <mat-card>
+    <canvas #rendererCanvas id="renderCanvas" style="background-color: #ccc;color: #000;"></canvas>
+  </mat-card>
+</div>
 
 <div class="container-fluid" *ngFor="let p of detailedPosts;">
   <mat-card>

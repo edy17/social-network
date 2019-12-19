@@ -14,6 +14,9 @@ export class PostComponent implements OnInit {
   @ViewChild('rendererCanvas', {static: true})
   public rendererCanvas: ElementRef<HTMLCanvasElement>;
 
+  @ViewChild('parentCanvas', {static: true})
+  public parentCanvas;
+
   detailedPosts: Array<DetailedPost>;
   enableEdition: boolean = false;
   currentPost: DetailedPost;
@@ -28,7 +31,7 @@ export class PostComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.mappingService.init(this.rendererCanvas);
+    this.mappingService.init(this.rendererCanvas, this.parentCanvas);
     //render(); // remove when using next line for animation loop (requestAnimationFrame)
     this.mappingService.animate();
 
@@ -57,5 +60,11 @@ export class PostComponent implements OnInit {
 
   clickOnComments(p: DetailedPost) {
     p.isExpanded = !p.isExpanded;
+  }
+
+  onResize(event) {
+    this.mappingService.camera.aspect = event.target.innerWidth / event.target.innerHeight;
+    this.mappingService.camera.updateProjectionMatrix();
+    this.mappingService.renderer.setSize(event.target.innerWidth, event.target.innerHeight);
   }
 }

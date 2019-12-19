@@ -1,23 +1,23 @@
 import * as THREE from 'three';
 import {MapControls} from 'three/examples/jsm/controls/OrbitControls.js';
 import {GUI} from 'three/examples/jsm/libs/dat.gui.module.js';
-import {Injectable, ElementRef, OnDestroy, NgZone} from '@angular/core';
+import {ElementRef, Injectable, NgZone, OnDestroy} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MappingService implements OnDestroy {
 
-  private canvas: HTMLCanvasElement;
-  private renderer: THREE.WebGLRenderer;
-  private camera: THREE.PerspectiveCamera;
-  private scene: THREE.Scene;
-  private light: THREE.AmbientLight;
-  private controls;
-  canvasWidth: number = 680;
-  canvasHeight: number = 400;
+  canvas: HTMLCanvasElement;
+  parentCanvas: HTMLDivElement;
+  renderer: THREE.WebGLRenderer;
+  camera: THREE.PerspectiveCamera;
+  scene: THREE.Scene;
+  controls;
+  canvasWidth: number;
+  canvasHeight: number;
 
-  private frameId: number = null;
+  frameId: number = null;
 
   public constructor(private ngZone: NgZone) {
   }
@@ -28,8 +28,9 @@ export class MappingService implements OnDestroy {
     }
   }
 
-  public init(canvas: ElementRef<HTMLCanvasElement>): void {
+  public init(canvas: ElementRef<HTMLCanvasElement>, parentCanvas: ElementRef<HTMLDivElement>): void {
     this.canvas = canvas.nativeElement;
+    this.parentCanvas = parentCanvas.nativeElement;
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xcccccc);
     this.scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
@@ -40,9 +41,10 @@ export class MappingService implements OnDestroy {
       antialias: true // smooth edges
     });
     this.renderer.setPixelRatio(window.devicePixelRatio);
-    this.renderer.setSize(this.canvasWidth, this.canvasHeight);
+    this.renderer.setSize(this.parentCanvas.clientWidth, this.parentCanvas.clientHeight);
 
-    this.camera = new THREE.PerspectiveCamera(60, this.canvasWidth / this.canvasHeight, 1, 1000);
+    this.camera = new THREE.PerspectiveCamera(60,
+      this.parentCanvas.clientWidth / this.parentCanvas.clientHeight, 1, 1000);
     this.camera.position.set(400, 200, 0);
     // controls
     this.controls = new MapControls(this.camera, this.renderer.domElement);
@@ -79,15 +81,8 @@ export class MappingService implements OnDestroy {
     let light2 = new THREE.AmbientLight(0x222222);
     this.scene.add(light2);
     //
-    window.addEventListener('resize', () => this.onWindowResize(), false);
     let gui = new GUI();
     gui.add(this.controls, 'screenSpacePanning');
-  }
-
-  onWindowResize() {
-    this.camera.aspect = this.canvasWidth / this.canvasHeight;
-    this.camera.updateProjectionMatrix();
-    this.renderer.setSize(this.canvasWidth, this.canvasHeight);
   }
 
   public animate() {

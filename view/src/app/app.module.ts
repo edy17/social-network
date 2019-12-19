@@ -13,6 +13,8 @@ import {MatListModule} from "@angular/material/list";
 import {FormsModule} from "@angular/forms";
 import {environment} from "../environments/environment";
 import { PostComponent } from './post/post.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+
 
 @NgModule({
   declarations: [
@@ -29,7 +31,8 @@ import { PostComponent } from './post/post.component';
     MatInputModule,
     MatCardModule,
     MatButtonModule,
-    MatListModule
+    MatListModule,
+    FlexLayoutModule
   ],
   providers: [
     {provide: 'BACKEND_API_URL', useValue: environment.backendApiUrl}
