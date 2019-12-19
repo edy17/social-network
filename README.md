@@ -25,7 +25,7 @@ mvn clean install
 aws cloudformation package --template-file sam.jvm.yaml --output-template-file output-sam.yaml --s3-bucket <Existing S3 bucket in the specified region for save dev builds>
 aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumServerless --capabilities CAPABILITY_IAM --region <AWS Region> 
 ```
-- To Run Server on provided Linux Runtime
+- To Run Server on provided Lanbda Linux Runtime
     - Make sure you have installed Docker
     - Compile source on native image executable with GraalVm docker container
     ```
