@@ -41,7 +41,6 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 - Make sure you have installed NodeJS
 - In `view` folder, Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-## To run Pipeline that performs Production server on AWS Lambda, DynamoDB and S3
-##and View distribution on AWS cloudFront
+## To run Pipeline that performs Production server on AWS Lambda, DynamoDB, S3 then Web distribution on AWS cloudFront
 - Configure Jenkins Server and save all needed parameter as global properties
 - Improve Jenkins File, push to repository and run pipeline
