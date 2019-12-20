@@ -11,7 +11,7 @@ quarkus.dynamodb.aws.credentials.static-provider.access-key-id=<AWS access key I
 quarkus.dynamodb.aws.credentials.static-provider.secret-access-key=<AWS Secret access key>
 spatium.image.bucket.name=<Existing S3 bucket in the specified region for save image>
 ```
-- Make sure you have installed Java8, Maven, AWS-CLI and AWS-SAM
+- Make sure you have installed Java8, Maven, AWS-CLI and AWS-SAM with your credentials
 
 -To run local Development server, listening port `5005` for remote debugging
 ```
