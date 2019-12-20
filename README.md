@@ -42,7 +42,7 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 - set a Spatium api url in `view/src/environments/environment.ts`
  - Default value is `http://localhost:8080` knowing that you run local dev server with `mvn compile quarkus:dev -Ddebug`
  - If you run dev server on aws, you cant get result Api url on AWS CloudFormation task description
-- In `view` folder, Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- In `view` folder, Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost:4200/`.
 
 ## To run Pipeline that performs Production server on AWS Lambda, DynamoDB, S3 then Web distribution on AWS cloudFront
 - Configure Jenkins Server and save all needed parameter as global properties
