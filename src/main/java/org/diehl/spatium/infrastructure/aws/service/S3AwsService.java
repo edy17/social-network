@@ -29,6 +29,9 @@ public class S3AwsService {
     @ConfigProperty(name = "quarkus.dynamodb.aws.credentials.static-provider.secret-access-key")
     String secretKey;
 
+    @ConfigProperty(name = "quarkus.dynamodb.aws.region")
+    String region;
+
     @ConfigProperty(name = "spatium.image.bucket.name")
     String bucketName;
 
@@ -40,7 +43,7 @@ public class S3AwsService {
         this.s3client = AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(Regions.EU_WEST_3)
+                .withRegion(region)
                 .build();
     }
 
