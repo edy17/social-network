@@ -30,6 +30,6 @@ Resources:
 Outputs:
   LambdaHttpNativeApi:
     Description: URL for application
-    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/posts'
+    Value: !Sub 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
     Export:
       Name: LambdaHttpNativeApi
