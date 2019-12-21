@@ -1,7 +1,9 @@
 # SPATIUM Application, version 1.0-SNAPSHOT
 Application based on a native cloud serverless architecture.
 The version 1.0-SNAPSHOT offers
-  -Implementation and deployment model on AWS lambda or Kubernetes. The application communicates with AWS DynamoDB and S3 services.
+  - Implementation and deployment model on AWS lambda or Kubernetes. The application communicates with AWS DynamoDB and S3 services.
+  - Approach of Domain-driven design
+  - Java Asynchronous programming 
 
 ## To run Development server with AWS Lambda, DynamoDB and S3
 - Create file `spatium/src/main/resources/application.properties`, and add there:
@@ -75,10 +77,4 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
     5. Set image of Docker and Kubectl as Jenkins agent in Kubernetes Pod template configuration
     6. In `k8s/jenkins` folder, Run `/init-jenkins.sh` to authorize Jenkins to create Kubernetes Object
     7. In `k8s` folder, Run `/init-deploy.sh` to initialize Kubernetes Object
-
-
-
-
-## To run Pipeline that performs Production server on AWS Lambda, DynamoDB, S3 then Web distribution on AWS cloudFront
-- Configure Jenkins Server and save all needed parameter as global properties
-- Improve Jenkins File, push to repository and run pipeline
+    8. Run pipeline
