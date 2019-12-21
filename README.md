@@ -30,8 +30,8 @@ aws cloudformation package --template-file sam.jvm.yaml --output-template-file o
 aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumServerless --capabilities CAPABILITY_IAM --region <AWS Region> 
 ```
 - To Run Server on provided Lambda Linux Runtime
-- Make sure you have installed Docker
-- Compile source on native image executable with GraalVm docker container
+ - Make sure you have installed Docker
+ - In `spatium` subfolder, Compile source in native image executable with GraalVm docker container running
 ```
 docker-compose up
 ```
