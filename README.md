@@ -1,9 +1,9 @@
 # SPATIUM Application, version 1.0-SNAPSHOT
 Application based on a native cloud serverless architecture.
 The version 1.0-SNAPSHOT offers
-  - Implementation and deployment model on AWS lambda or Kubernetes. The application communicates with AWS DynamoDB and S3 services.
-  - Approach of Domain-driven design
-  - Java Asynchronous programming 
+- Implementation and deployment model on AWS lambda or Kubernetes. The application communicates with AWS DynamoDB and S3 services.
+- Approach of Domain-driven design
+- Java Asynchronous programming 
 
 ## To run Development server with AWS Lambda, DynamoDB and S3
 - Create file `spatium/src/main/resources/application.properties`, and add there:
