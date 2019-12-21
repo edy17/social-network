@@ -54,7 +54,7 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 ## To deploy production environment on Kubernetes and CI/CD pipeline with Jenkins
 
 - Create a Kubernetes Cluster at your cloud provider, and get a `kubeconfig` file
-- Make sure you have installed locally [Kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/) on your Kubernetes cluster on configure a `kubeconfig` file
+- Make sure you have installed locally [Kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/) and store `kubeconfig` file
 - Connect a docker registry to a cluster to host applications
 ```
 kubectl create secret docker-registry regcred --docker-server="<DOCEKR_REGISTRY>" --docker-username="<DOCEKR_USERNAME>" --docker-password="<DOCEKR_PASSWORD>" --docker-email="<DOCEKR_EMAIL>"
@@ -82,5 +82,4 @@ echo http://$SERVICE_IP:8080/login
     - Jenkins credentials: `AWS_CREDENTIALS_ID`, `DOCKER_CREDENTIALS_ID` and provide `K8s_CREDENTIALS_ID`
 - Set image of Docker and Kubectl as Jenkins agent in Kubernetes Pod template configuration
 - In `k8s/jenkins` folder, Run `/init-jenkins.sh` to authorize Jenkins to create Kubernetes Object
-- In `k8s` folder, Run `/init-deploy.sh` to initialize Kubernetes Object
 - Run pipeline
