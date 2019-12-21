@@ -17,7 +17,7 @@ quarkus.dynamodb.aws.credentials.static-provider.access-key-id=<AWS access key I
 quarkus.dynamodb.aws.credentials.static-provider.secret-access-key=<AWS Secret access key>
 spatium.image.bucket.name=<Existing S3 bucket in the specified region for save image>
 ```
-- Make sure you have installed [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Maven](https://maven.apache.org/install.html), [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html), [AWS-SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html), and with your  AWS credentials.
+- Make sure you have installed [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Maven](https://maven.apache.org/install.html), [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html), [AWS-SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html), and AWS credentials.
 - To run local Development server, listening port `5005` for remote debugging, go to `spatium` subfolder and run
 ```
 mvn clean install
