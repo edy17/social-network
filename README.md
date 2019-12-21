@@ -49,7 +49,7 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 - In `view` folder, Run `npm install` and `ng serve` for a dev server. Navigate to `http://localhost:4200/`.
 
 
-## To deploy production environment on Kubernetes and CI/CD Jenkins pipeline
+## To deploy production environment on Kubernetes and CI/CD pipeline with Jenkins
 
 - Create a Kubernetes Cluster at your cloud provider, and get a `kubeconfig` file
 - Make sure you have installed locally [Kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/) on your Kubernetes cluster on configure a `kubeconfig` file
