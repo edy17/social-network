@@ -18,12 +18,12 @@ quarkus.dynamodb.aws.credentials.static-provider.secret-access-key=<AWS Secret a
 spatium.image.bucket.name=<Existing S3 bucket in the specified region for save image>
 ```
 - Make sure you have installed [Java 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html), [Maven](https://maven.apache.org/install.html), [AWS-CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv1.html), [AWS-SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html), and with your  AWS credentials.
--To run local Development server, listening port `5005` for remote debugging
+- To run local Development server, listening port `5005` for remote debugging, go to `spatium` subfolder and run
 ```
 mvn clean install
 mvn compile quarkus:dev -Ddebug
 ```
-- To Run Server on JVM Serveless Container
+- To Run Server on JVM Serveless Container, go to `spatium` subfolder and run
 ```
 mvn clean install
 aws cloudformation package --template-file sam.jvm.yaml --output-template-file output-sam.yaml --s3-bucket <Existing S3 bucket in the specified region for save dev builds>
@@ -35,7 +35,7 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 ```
 docker-compose up
 ```
-- Run
+ - Then run
 ```
 aws cloudformation package --template-file sam.native.yaml --output-template-file output-sam.yaml --s3-bucket <Existing S3 bucket in the specified region for save dev builds>
 aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumServerless --capabilities CAPABILITY_IAM --region <AWS Region>
