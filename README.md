@@ -59,7 +59,7 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 ```
 kubectl create secret docker-registry regcred --docker-server="<DOCEKR_REGISTRY>" --docker-username="<DOCEKR_USERNAME>" --docker-password="<DOCEKR_PASSWORD>" --docker-email="<DOCEKR_EMAIL>"
 ```
-- Make sure you have installed [Helm](https://helm.sh/docs/intro/quickstart/) on your Kubernetes cluster with Kubectl
+- Make sure you have installed [Helm](https://helm.sh/docs/intro/install/) on your Kubernetes cluster with Kubectl
 - Create a Kubernetes deployment of Jenkins named `kissing-giraffe-jenkins`  with helm:
 ```
 helm install --name kissing-giraffe-jenkins --set master.servicetype=NodePort stable/jenkins
