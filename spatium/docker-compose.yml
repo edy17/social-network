@@ -4,5 +4,6 @@ services:
   native_build:
     build:
       context: .
+      dockerfile: Dockerfile.native.build
     volumes:
       - ./target:/tmp/share

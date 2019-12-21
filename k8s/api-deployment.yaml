@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 2
+  minReadySeconds: 15
+  selector:
+    matchLabels:
+      app: spatium-backend
+  template:
+    metadata:
+      labels:
+        app: spatium-backend
+    spec:
+      containers:
+        - image: $api_image_tag
+          imagePullPolicy: Always
+          name: spatium-backend
+          ports:
+            - containerPort: 8080
+      imagePullSecrets:
+        - name: regcred

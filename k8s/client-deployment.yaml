@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spatium-frontend
+  template:
+    metadata:
+      labels:
+        app: spatium-frontend
+    spec:
+      containers:
+        - image: $client_image_tag
+          imagePullPolicy: Always
+          name: spatium-frontend
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: regcred
