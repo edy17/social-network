@@ -54,15 +54,21 @@ aws cloudformation deploy --template-file output-sam.yaml --stack-name SpatiumSe
 - Create a Kubernetes Cluster at your cloud provider, and get a `kubeconfig` file
 - Make sure you have installed locally [Kubectl](https://kubernetes.io/fr/docs/tasks/tools/install-kubectl/) on your Kubernetes cluster on configure a `kubeconfig` file
 - Connect a docker registry to a cluster to host applications
-`kubectl create secret docker-registry regcred --docker-server="<DOCEKR_REGISTRY>" --docker-username="<DOCEKR_USERNAME>" --docker-password="<DOCEKR_PASSWORD>" --docker-email="<DOCEKR_EMAIL>"`
+```
+kubectl create secret docker-registry regcred --docker-server="<DOCEKR_REGISTRY>" --docker-username="<DOCEKR_USERNAME>" --docker-password="<DOCEKR_PASSWORD>" --docker-email="<DOCEKR_EMAIL>"
+```
 
 - Make sure you have installed [Helm](https://helm.sh/docs/intro/quickstart/) on your Kubernetes cluster with Kubectl
 - Create a Kubernetes deployment of Jenkins named `kissing-giraffe-jenkins`  with helm:
-    `helm install --name kissing-giraffe-jenkins --set master.servicetype=NodePort stable/jenkins`
+    ```
+    helm install --name kissing-giraffe-jenkins --set master.servicetype=NodePort stable/jenkins
+    ```
     - Then follow:
     NOTES:
     1. Get your 'admin' user password by running:
-      `printf $(kubectl get secret --namespace default kissing-giraffe-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo`
+      ```
+      printf $(kubectl get secret --namespace default kissing-giraffe-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+      ```
     2. Get the Jenkins URL to visit by running these commands in the same shell:
       NOTE: It may take a few minutes for the LoadBalancer IP to be available.
             You can watch the status of by running `kubectl get svc --namespace default -w kissing-giraffe-jenkins`
