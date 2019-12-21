@@ -5,20 +5,7 @@ node('kissing-giraffe-jenkins-slave') {
         stage('Checkout') {
             checkout scm
         }
-        stage('Get API URL') {
-            container('kubectl') {
-                withKubeConfig([credentialsId: env.K8s_CREDENTIALS_ID,
-                                serverUrl    : env.K8s_SERVER_URL,
-                                contextName  : env.K8s_CONTEXT_NAME,
-                                clusterName  : env.K8s_CLUSTER_NAME]) {
-                    url = sh(
-                            script: 'kubectl describe service api-service | grep Ingress | awk \'{print \$(NF)}\'',
-                            returnStdout: true
-                    ).trim()
-                }
-            }
-        }
-        stage('Build and Push Docker Image to Registry') {
+        stage('Build and Push API Docker Image to Registry') {
             container('docker') {
                 withCredentials([[$class          : 'UsernamePasswordMultiBinding',
                                   credentialsId   : env.DOCKER_CREDENTIALS_ID,
@@ -41,14 +28,48 @@ node('kissing-giraffe-jenkins-slave') {
                                     docker rmi -f ${api_image_tag}                              
                                 """
                             }
-                            dir("view") {
-                                sh """
+                        }
+                    }
+                }
+            }
+        }
+        stage('Get API URL') {
+            container('kubectl') {
+                withKubeConfig([credentialsId: env.K8s_CREDENTIALS_ID,
+                                serverUrl    : env.K8s_SERVER_URL,
+                                contextName  : env.K8s_CONTEXT_NAME,
+                                clusterName  : env.K8s_CLUSTER_NAME]) {
+                    if (env.BUILD_NUMBER == '1') {
+                        dir("k8s") {
+                            sh """
+                            envsubst '$api_image_tag' < api-deployment.yaml > api.tmp.yaml
+                            kubectl create -f api-service.yaml
+                            kubectl create -f api.tmp.yaml
+                           """
+                        }
+                    }
+                    url = sh(
+                            script: 'kubectl describe service api-service | grep Ingress | awk \'{print \$(NF)}\'',
+                            returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+        stage('Build and Push Client Docker Image to Registry') {
+            container('docker') {
+                withCredentials([[$class          : 'UsernamePasswordMultiBinding',
+                                  credentialsId   : env.DOCKER_CREDENTIALS_ID,
+                                  usernameVariable: 'USERNAME',
+                                  passwordVariable: 'PASSWORD']]) {
+                    docker.withRegistry("https://${env.DOCKER_REGISTRY}", env.DOCKER_CREDENTIALS_ID) {
+                        dir("view") {
+                            sh """
                                     docker build --build-arg BACKEND_API_URL=http://${url} -t ${client_image_tag} .
                                     docker push ${client_image_tag} 
                                     docker rmi -f ${client_image_tag}                                   
                                 """
-                            }
                         }
+
                     }
                 }
             }
@@ -62,14 +83,9 @@ node('kissing-giraffe-jenkins-slave') {
                     if (env.BUILD_NUMBER == '1') {
                         dir("k8s") {
                             sh """
-                            envsubst '$api_image_tag' < api-deployment.yaml > api.tmp
-                            mv api.tmp api-deployment.yaml
-                            envsubst '$client_image_tag' < client-deployment.yaml > client.tmp
-                            mv client.tmp client-deployment.yaml
-                            kubectl create -f api-service.yaml
+                            envsubst '$client_image_tag' < client-deployment.yaml > client.tmp.yaml
                             kubectl create -f client-service.yaml
-                            kubectl create -f api-deployment.yaml
-                            kubectl create -f client-deployment.yaml
+                            kubectl create -f client.tmp.yaml
                            """
                         }
                     } else {
