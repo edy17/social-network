@@ -80,6 +80,8 @@ echo http://$SERVICE_IP:8080/login
 - Save all needed environment variables for Jenkinsfile
     - Jenkins global properties: `AWS_REGION`, `AWS_IMAGE_BUCKET` and `DOCKER_REGISTRY`
     - Jenkins credentials: `AWS_CREDENTIALS_ID`, `DOCKER_CREDENTIALS_ID` and provide `K8s_CREDENTIALS_ID`
+    - Jenkins environment variables: `AWS_REGION`, `AWS_IMAGE_BUCKET`, `K8s_SERVER_URL`, `K8s_CONTEXT_NAME`, `K8s_CLUSTER_NAME`, `DOCKER_REGISTRY` and `DOCKER_REPOSITORY`
+    - Jenkins credentials and their Ids as environment variables: `AWS_CREDENTIALS_ID`, `DOCKER_CREDENTIALS_ID` and `K8s_CREDENTIALS_ID`
 - Set image of Docker and Kubectl as Jenkins agent in Kubernetes Pod template configuration
 - In `k8s/jenkins` folder, Run `/init-jenkins.sh` to authorize Jenkins to create Kubernetes Object
 - Run pipeline
